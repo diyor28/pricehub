@@ -61,22 +61,22 @@ class PriceComparator(View):
     def get(self, request, *args, **kwargs):
         phone_a = "https://api.umarket.uz/api/v2/product/231855"
         phone_b = "https://api.umarket.uz/api/v2/product/287201"
-        response_a = requests.get(phone_a, headers=headers)
-        response_b = requests.get(phone_b, headers=headers)
-        product_a = response_a.json()
-        product_b = response_b.json()
+        response_a = requests.get(phone_a, headers=headers).json()
+        response_b = requests.get(phone_b, headers=headers).json()
+        product_a = response_a["payload"]["data"]
+        product_b = response_b["payload"]["data"]
         context = {
             "phoneA": {
-                "title": product_a["payload"]["data"]["title"],
-                "url": product_a["payload"]["data"]["photos"][0]["photo"]["800"]["high"],
-                "CPU": product_a["payload"]["data"]["attributes"][0],
-                "mainCam": product_a["payload"]["data"]["attributes"][8]
+                "title": product_a["title"],
+                "url": product_a["photos"][0]["photo"]["800"]["high"],
+                "CPU": product_a["attributes"][0],
+                "mainCam": product_a["attributes"][8]
             },
             "phoneB": {
-                "title": product_b["payload"]["data"]["title"],
-                "url": product_b["payload"]["data"]["photos"][0]["photo"]["800"]["high"],
-                "CPU": product_b["payload"]["data"]["attributes"][1],
-                "mainCam": product_b["payload"]["data"]["attributes"][3]
+                "title": product_b["title"],
+                "url": product_b["photos"][0]["photo"]["800"]["high"],
+                "CPU": product_b["attributes"][1],
+                "mainCam": product_b["attributes"][3]
             }
         }
         return render(request, "comparison.html", context=context)
@@ -89,8 +89,7 @@ class Login(View):
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
         if not form.is_valid():
-            return render(request, "login.html",
-                          context={"error": "The form has been filled out incorrectly check email and password"})
+            return render(request, "login.html", context={"error": "The form has been filled out incorrectly check email and password"})
 
         user = users.get(form.cleaned_data['email'], None)
         if user is None:
