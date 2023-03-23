@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>fake uzum</title>
+    {% block css_additional %} {% endblock %}
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            background:#EFEFEF;
+        }
+        .categories {
+           display: grid;
+           grid-template-columns: 300px 300px 300px;
+           width: 100%;
+           justify-content: center;
+           gap: 20px;
+        }
+
+        .category {
+            color: #444;
+        }
+        .products {
+           display: grid;
+           grid-template-columns: 300px 300px 300px;
+           width: 100%;
+           justify-content: center;
+           gap: 20px;
+           padding-top: 40px;
+
+        }
+        .product {
+            width: 200px;
+
+        }
+        .search {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            margin: 50px 0;
+        }
+        .search input {
+            padding: 10px;
+        }
+
+        .search button {
+            background: #3939ff;
+            color: white;
+        }
+        h1.title {
+            text-align: center;
+            font-size: 22px;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+{% block content %}
+    <h1 class="title">Shop and Save on Millions of Products.</h1>
+    <div class="search">
+        <input type="text" name="search">
+        <button>Найти</button>
+    </div>
+    <div class="categories">
+    {% for category in categories %}
+        <div class="category">
+            {{ category.title }}
+        </div>
+    {% endfor %}
+    </div>
+
+
+    <div class="products"  >
+
+        {%for product in products %}
+        <a href={{product.url}} target="_blank">
+            <div class="product">
+
+
+                <div class="photo">
+
+                    <img src={{product.photo}} width="200px">
+
+                </div>
+                <div class="title" >
+                    {{product.title}}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+{% endblock %}
+</body>
+</html>
+

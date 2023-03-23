@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    {% load static %}
+    {% block css_additional %}
+    <link rel="stylesheet" href=" {% static 'pricehub/css/comparison.css' %}">
+    {% endblock %}
+    <style>
+    .phone, .features{
+        background: #eeeeee !important;
+    }
+<!--        .container {-->
+<!--            background: none;-->
+<!--        }-->
+    </style>
+</head>
+<body>
+
+{% block content %}
+    <section class="phone">
+        <div class="container">
+            <div class="phone__wrapper">
+                <div class="phone">
+                    <img class="image" src="{{ phoneA.url }}" alt="">
+                    <div class="text">{{ phoneA.title }}</div>
+<!--                    {{ phoneA.ram }}-->
+<!--                    {{ phoneA.price }}-->
+                </div>
+                <h1>VS</h1>
+                <div class="phone">
+                    <img class="image" src="{{ phoneB.url }}" alt="">
+                    <p class="text">{{ phoneB.title }}</p>
+<!--                    {{ phoneB.ram }}-->
+<!--                    {{ phoneB.price }}-->
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features">
+        <div class="container">
+            <div class="card">
+                <div class="card__header">
+                    <div class="card__title">Экран</div>
+                    <div class="card__subtitle">Сравнение экранов смартфонов</div>
+                </div>
+            </div>
+            <table class="specs-table">
+                <tbody>
+                <tr>
+                    <td class="cell__h">Процессор</td>
+                    <td class="cell__winner">{{ phoneA.CPU }}</td>
+                    <td class="cell__looser">{{ phoneB.CPU }}</td>
+                </tr>
+                <tr>
+                    <td class="cell__h">Основная камера</td>
+                    <td class="cell__looser">{{ phoneA.mainCam }}</td>
+                    <td class="cell__winner">{{ phoneB.mainCam }}</td>
+                </tr>
+                <tr>
+                    <td class="cell__h">Разрешение</td>
+                    <td class="cell__looser">1080 x 2400 пикселей</td>
+                    <td class="cell__winner">1080 x 2408 пикселей</td>
+                </tr>
+                <tr>
+                    <td class="cell__h">Тип</td>
+                    <td class="cell__winner">Super AMOLED</td>
+                    <td class="cell__looser">PLS TFT</td>
+                </tr>
+                <tr>
+                    <td class="cell__h">Размер</td>
+                    <td class="cell__looser">6.4 дюймов</td>
+                    <td class="cell__winner">6.6 дюймов</td>
+                </tr>
+                <tr>
+                    <td class="cell__h">Разрешение</td>
+                    <td class="cell__looser">1080 x 2400 пикселей</td>
+                    <td class="cell__winner">1080 x 2408 пикселей</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+{% endblock %}
+
+</body>
+</html>
+

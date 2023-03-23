@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    {% load static %}
+    {% block css_additional %}
+        <link rel="stylesheet" href=" {% static 'pricehub/css/login.css' %}">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+        <div class="container">
+
+            <form method="POST">
+                {%csrf_token%}
+                <label>
+                    el.poshta
+                    <input class="std-input" type="email" name="email"/>
+
+                    password
+                    <input class="btn-primary"   type="password" name="password"/>
+                {{ error }}
+                <button class="btn-primary" type="submit">enter</button>
+                </label>
+            </form>
+        </div>
+    {% endblock %}
+</body>
+</html>
