@@ -17,7 +17,7 @@ section{
 }
 
 .image {
-    width: 300px;
+    width: 250px;
     height: 500px;
     object-fit: cover;
 }
