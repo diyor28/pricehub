@@ -170,6 +170,13 @@
         .cont {
             padding-bottom: 30px;
         }
+        .bottom-right{
+          right: 0;
+          bottom: 0;
+          position: absolute;
+        }
+
+
 
 
 
@@ -181,17 +188,19 @@
     <div class="box">
         <div>
             <a href="/">Home</a>
-            <a href="/comparison">Comparing</a>
-            <a href="/admin">Admin</a>
+            <a href="/compare">Comparing</a>
         </div>
+    </div>
+    <div class="bottom-right">
+        <form action="/login">
+            <button style="border-radius: 10px; border: 1px solid black; width: 60px; height:50px">Log in</button>
+        </form>
     </div>
     <main>
         <div class="search">
             <input type="text" name="search">
             <button class="search-btn" style="border-radius: 10px; border: 1px solid black; width: 60px;">Найти</button>
-            <form action="/login">
-                <button style="border-radius: 10px; border: 1px solid black; width: 60px; height:50px">Log in</button>
-            </form>
+
         </div>
         <div class="categories">
             <ul class="content-ul">
