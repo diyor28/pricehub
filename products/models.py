@@ -3,7 +3,7 @@ from django.db import models
 
 class AnchorCategoriesModel(models.Model):
     title = models.CharField(max_length=255)
-    parent = models.ForeignKey("AnchorCategoriesModel", on_delete=models.CASCADE, null=True)
+    parent = models.ForeignKey("AnchorCategoriesModel", on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         db_table = "anchor_categories"
