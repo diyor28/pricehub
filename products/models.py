@@ -6,4 +6,6 @@ class ProductModel(models.Model):
     price = models.FloatField()
     photo = models.URLField(null=True)
     url = models.URLField(null=True)
-# Create your models here.
+
+class Categories(models.Model):
+    title = models.CharField(max_length=255)
