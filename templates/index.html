@@ -109,6 +109,7 @@
         .box select option {
             padding: 30px;
         }
+
         .search {
             display: flex;
             gap: 10px;
@@ -117,14 +118,16 @@
             margin: 50px 0;
 
         }
+
         .search input {
             padding: 10px;
             border-radius: 10px;
             border: 1px solid black;
 
-        .search-btn{
+        .search-btn {
             border-radius: 10px;
         }
+
         .popular {
             width: 100%;
             padding-top: 20px;
@@ -176,44 +179,46 @@
 </head>
 <body>
 {% block content %}
-<div class="content">
-    <div class="box">
-        <div>
-            <a href="/">Home</a>
-            <a href="/comparison">Comparing</a>
-            <a href="/admin">Admin</a>
-        </div>
-    </div>
-    <main>
-        <div class="search">
-            <input type="text" name="search">
-            <button class="search-btn" style="border-radius: 10px; border: 1px solid black; width: 60px;">Найти</button>
-        </div>
-        <div class="categories">
-            <ul class="content-ul">
-                {% for category in categories %}
-                <li>
-                    <a href="">{{ category.title }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="cont">
-            <h1>Popular Phones</h1>
-            <div class="popular">
-                {% for item in products %}
-                <a class="popular_product" href={{ item.link }}>
-                    <img src={{ item.photo }} alt="">
-                    <div>
-                        <p>{{ item.title }}</p>
-                        <p>{{ item.price }}</p>
-                    </div>
-                </a>
-                {% endfor %}
+    <div class="content">
+        <div class="box">
+            <div>
+                <a href="/">Home</a>
+                <a href="/compare">Comparing</a>
+                <a href="/categories">Categories</a>
+                <a href="/admin">Admin</a>
             </div>
         </div>
-    </main>
-</div>
+        <main>
+            <div class="search">
+                <input type="text" name="search">
+                <button class="search-btn" style="border-radius: 10px; border: 1px solid black; width: 60px;">Найти
+                </button>
+            </div>
+            <div class="categories">
+                <ul class="content-ul">
+                    {% for category in categories %}
+                        <li>
+                            <a href="">{{ category.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="cont">
+                <h1>Popular Phones</h1>
+                <div class="popular">
+                    {% for item in products %}
+                        <a class="popular_product" href={{ item.link }}>
+                            <img src={{ item.photo }} alt="">
+                            <div>
+                                <p>{{ item.title }}</p>
+                                <p>{{ item.price }}</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+    </div>
 {% endblock %}
 </body>
 </html>
