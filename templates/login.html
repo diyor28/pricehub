@@ -2,32 +2,132 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    {% load static %}
-    {% block css_additional %}
-        <link rel="stylesheet" href=" {% static 'pricehub/css/login.css' %}">
-    {% endblock %}
+    <title>Login | PriceHub</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+            list-style: none;
+            text-decoration: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #eeeeee;
+        }
+
+        .content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        main {
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        .categories .content-ul li {
+            width: 23%;
+        }
+
+        .categories .content-ul li a {
+            color: black;
+        }
+
+        .box {
+            width: 100%;
+            padding: 20px;
+            background: #444444;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .box div {
+            display: flex;
+            gap: 15px;
+            color: white;
+        }
+
+        .box div a {
+            color: white;
+        }
+
+        main {
+            margin-top: 60px;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        main form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 60%;
+            height: 100%;
+            gap: 20px;
+        }
+
+        main form h1{
+            font-size: 40px;
+        }
+
+        main form {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        main form input {
+            width: 100%;
+            border-radius: 5px !important;
+            border: none;
+            outline: none;
+            padding: 10px;
+        }
+
+        main form .submit_btn {
+            width: 100%;
+            background: #0059ff;
+            color: white;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
 </head>
 <body>
-    {% block content %}
-        <div class="container">
-
-            <form method="POST">
-                {%csrf_token%}
-                <label>
-                    el.poshta
-                    <input class="std-input" type="email" name="email"/>
-
-                    password
-                    <input class="btn-primary"   type="password" name="password"/>
-                {{ error }}
-                <button class="btn-primary" type="submit">enter</button>
-                </label>
-            </form>
+{% block content %}
+    <div class="content">
+        <div class="box">
+            <div>
+                <a href="/">Home</a>
+                <a href="/comparison">Comparing</a>
+            </div>
         </div>
-    {% endblock %}
+        <main>
+            <form method="POST">
+                {% csrf_token %}
+                <h1>Sing In</h1>
+                <input type="email" placeholder="email" name="email">
+                <input type="password" placeholder="password" name="password">
+                <p style="color: red">{{ error }}</p>
+                <button class="submit_btn" type="submit">Вход</button>
+            </form>
+        </main>
+    </div>
+{% endblock %}
 </body>
 </html>
