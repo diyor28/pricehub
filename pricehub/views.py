@@ -49,7 +49,6 @@ class HomePage(View):
             {"title": "Appliances"},
             {"title": "Auto Parts"},
             {"title": "Babies & Kids"}
-
         ]
         products = ProductModel.objects.all()
         return render(request, 'index.html', context={"categories": categories, "products": products})
@@ -101,7 +100,6 @@ class Login(View):
 
         return redirect('/')
 
-import requests
 
 class CategoriesView(View):
     def category_box(self, categories):
