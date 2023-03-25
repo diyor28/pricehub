@@ -101,9 +101,6 @@ class Login(View):
 
         return redirect('/')
 
-
-from django.views import View
-from django.shortcuts import render
 import requests
 
 class CategoriesView(View):
