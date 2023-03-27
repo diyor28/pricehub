@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomePage.as_view()),
     path('compare/', PriceComparator.as_view()),
-    path('login/',Login.as_view())
+    path('login/',Login.as_view()),
+    path('', include(api.py)),
 ]
 
