@@ -16,7 +16,6 @@ class ProductsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = ProductModel.objects.filter(title__contains=self.request.query_params['q'])
-        print(self.request.query_params['q'])
         return queryset
 
 
