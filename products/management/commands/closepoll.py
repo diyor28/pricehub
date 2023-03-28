@@ -5,6 +5,6 @@ class Command(BaseCommand):
     help = 'Closes the specified poll for voting'
 
 
-
     def handle(self, *args, **options):
         print("Hello world")
+        print("Add more code here")
