@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Categories</title>
+    <style>
+        * {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+        }
+
+        body {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        ul {
+            width: 100%;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            list-style: none;
+            justify-content: center;
+        }
+
+        li {
+            width: 29%;
+            padding: 10px;
+            border-radius: 15px;
+            background: #e1e1e1;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        li:hover {
+            background: #bdbdbd;
+        }
+
+        h1 {
+            padding: 30px;
+            padding-left: 36px;
+            font-size: 50px;
+        }
+
+        main {
+            max-width: 60%;
+            margin: 0 auto;
+        }
+
+        .box {
+            width: 100%;
+            padding: 20px;
+            background: #444444;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .box div {
+            display: flex;
+            gap: 15px;
+            color: white;
+        }
+
+        .box div a {
+            color: white;
+        }
+
+        .box select {
+            color: black;
+            padding: 12px;
+            width: 250px;
+            border: none;
+            font-size: 20px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            outline: none;
+            border-radius: 10px;
+        }
+
+        .box select::-webkit-scrollbar {
+            width: 10px;
+            background: #c4c4c4;
+            border-radius: 30px;
+        }
+
+        .box select::-webkit-scrollbar-thumb {
+            width: 10px;
+            background: #929292;
+            border-radius: 30px;
+        }
+
+        .box:hover::before {
+            color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .box select option {
+            padding: 30px;
+        }
+        .cont{
+            width: 60%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <div>
+        <a href="/">Home</a>
+        <a href="/compare">Comparing</a>
+        <a href="/categories">Categories</a>
+    </div>
+</div>
+<div class="cont">
+    <h1>Categories</h1>
+    <ul>
+        {% for category in categories %}
+            <li>
+                <span>{{ category.title }}</span>
+                <span style="color: #007000">{{ category.productAmount }} <span
+                        style="color: #000000">products</span></span>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>

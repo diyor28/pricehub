@@ -9,4 +9,5 @@ services:
     volumes:
       - ~/volumes/pricehub:/var/lib/postgresql/data
     environment:
+      - POSTGRES_DB=pricehub
       - POSTGRES_PASSWORD=postgres
