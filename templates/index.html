@@ -109,6 +109,7 @@
         .box select option {
             padding: 30px;
         }
+
         .search {
             display: flex;
             gap: 10px;
@@ -117,14 +118,17 @@
             margin: 50px 0;
 
         }
+
         .search input {
             padding: 10px;
             border-radius: 10px;
             border: 1px solid black;
+        }
 
-        .search-btn{
+        .search-btn {
             border-radius: 10px;
         }
+
         .popular {
             width: 100%;
             padding-top: 20px;
@@ -133,7 +137,7 @@
             flex-wrap: wrap;
         }
 
-        .popular .popular_product {
+        .popular_product {
             width: 24%;
             border-radius: 10px;
             padding: 15px;
@@ -144,9 +148,10 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            color: black;
         }
 
-        .popular .popular_product div {
+        .popular_product div {
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -154,32 +159,22 @@
             margin-top: 10px;
         }
 
-        .popular .popular_product p:nth-child(2) {
+        .popular_product p:nth-child(2) {
             font-weight: 700;
         }
 
-        .popular .popular_product img {
+        .popular_product img {
             width: 100%;
             border-radius: 10px;
         }
 
-        .popular .popular_product:hover {
+        .popular_product:hover {
             background: #c5c5c5;
         }
 
         .cont {
             padding-bottom: 30px;
         }
-        .bottom-right{
-          right: 0;
-          bottom: 0;
-          position: absolute;
-        }
-
-
-
-
-
     </style>
 </head>
 <body>
@@ -192,14 +187,14 @@
             <a href="/categories">Categories</a>
 
         </div>
-                 <form action="/login" >
-                     <button style="border-radius: 10px; border: 1px solid black; width: 60px;">Log in</button>
-                 </form>
+        <form action="/login">
+            <button style="border-radius: 10px; border: 1px solid black; width: 60px;">Log in</button>
+        </form>
     </div>
 
     <main>
         <div class="search">
-            <input type="text" name="search">
+            <input class="search-inp" type="text" name="search">
             <button class="search-btn" style="border-radius: 10px; border: 1px solid black; width: 60px;">Найти</button>
 
         </div>
@@ -215,19 +210,66 @@
         <div class="cont">
             <h1>Popular Phones</h1>
             <div class="popular">
-                {% for item in products %}
-                <a class="popular_product" href={{ item.link }}>
-                    <img src={{ item.photo }} alt="">
-                    <div>
-                        <p>{{ item.title }}</p>
-                        <p>{{ item.price }}</p>
-                    </div>
-                </a>
-                {% endfor %}
             </div>
         </div>
     </main>
 </div>
 {% endblock %}
+<script>
+    let arr = [
+        {
+            id: 1,
+            title: "iphone12",
+            price: '120000',
+            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
+            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
+        },
+        {
+            id: 2,
+            title: "iphone12",
+            price: '120000',
+            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
+            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
+        },
+        {
+            id: 3,
+            title: "iphone12",
+            price: '120000',
+            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
+            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
+        },
+        {
+            id: 4,
+            title: "iphone14",
+            price: '120000',
+            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
+            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
+        }
+    ]
+    let result = []
+
+    let inp = document.querySelector('.search-inp')
+    let cont = document.querySelector('.popular')
+    inp.onkeyup = () => {
+        result = arr.filter(i => i.title.includes(inp.value))
+        reload(result)
+    }
+
+    function reload(prodcucts) {
+        cont.innerHTML = ''
+        for (let i of prodcucts) {
+            cont.innerHTML += `
+                <a class="popular_product" href="${i.link}">
+                    <img src="${i.photo}" alt="">
+                        <div>
+                            <p>${i.title}</p>
+                            <p>${i.price}</p>
+                        </div>
+                </a>
+           `
+        }
+    }
+    reload(arr)
+</script>
 </body>
 </html>
