@@ -1,6 +1,7 @@
-from django.core.management.base import BaseCommand
-from products.models import CategoriesModel, ProductModel
 import requests
+from django.core.management.base import BaseCommand
+
+from products.models import CategoriesModel, ProductModel
 
 
 def variables(categoryId: int, offset: int, limit: int):
@@ -84,12 +85,12 @@ class Command(BaseCommand):
     help = 'Closes the specified poll for voting'
 
     def handle(self, *args, **options):
-        # print(CategoriesModel.objects.filter(source='uzum'))
         uzum_categories = CategoriesModel.objects.filter(source='uzum')
-        # download = download_products(products)
         for uzum_category in uzum_categories:
             products = download_products(int(uzum_category.remote_id))
             for data in products:
-                saveData = ProductModel(title=data['catalogCard']['title'], price=data['catalogCard']['minSellPrice'], category_id=uzum_category.id,
-                                        anchor_category_id=uzum_category.anchor_id)
-                saveData.save()
+                product = ProductModel(title=data['catalogCard']['title'],
+                                       price=data['catalogCard']['minSellPrice'],
+                                       category_id=uzum_category.id,
+                                       anchor_category_id=uzum_category.anchor_id)
+                product.save()
