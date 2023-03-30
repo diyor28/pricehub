@@ -111,6 +111,7 @@
         .box select option {
             padding: 30px;
         }
+
         .search {
             display: flex;
             gap: 10px;
@@ -119,10 +120,12 @@
             margin: 50px 0;
 
         }
+
         .search input {
             padding: 10px;
             border-radius: 10px;
             border: 1px solid black;
+        }
 
         .search-btn {
             border-radius: 10px;
@@ -158,6 +161,10 @@
             margin-top: 10px;
         }
 
+        form input {
+            width: 300px;
+        }
+
         .popular_product p:nth-child(2) {
             font-weight: 700;
         }
@@ -185,6 +192,7 @@
             background: #e5e5e5;
             position: absolute;
             display: none;
+            top: 50px;
         }
 
         .dropdown .dropdown-item {
@@ -216,12 +224,12 @@
         }
 
         /* Style the search field */
-        form.example input[type=text] {
+        form.example input {
             padding: 10px;
             font-size: 17px;
             border: 1px solid grey;
             float: left;
-            width: 50%;
+            width: 400px;
             background: #f1f1f1;
         }
 
@@ -241,102 +249,75 @@
         form.example button:hover {
             background: #0b7dda;
         }
-
-        /* Clear floats */
-        form.example::after {
-            content: "";
-            clear: both;
-            display: table;
-        }
-
-
-        a.kir {
-            color: blue;
-        }
-
-        a.kir2 {
-            color: blue;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-        }
-
-        .kit {
-            float: left;
-            margin-right: 20px;
-        }
-
     </style>
 </head>
 <body>
 {% block content %}
-    <div class="content">
-        <div class="box">
-            <div>
-                <a href="/">Home</a>
-                <a href="/compare">Comparing</a>
-                <a href="/categories">Categories</a>
+<div class="content">
+    <div class="box">
+        <div>
+            <a href="/">Home</a>
+            <a href="/compare">Comparing</a>
+            <a href="/categories">Categories</a>
 
-            </div>
         </div>
-
-        <main>
-            <div class="search">
-                <a href="/" aria-current="page" class="row middle-mbs logo-link exact-active-link active-link"
-                   ui-link="ui-link" data-test-id="link__logo">
-                    <h1 class="kit">Price HUB</h1></a>
-
-                <!-- Load icon library -->
-                <link rel="stylesheet"
-                      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-                <!-- The form -->
-                <form class="example" action="action_page.php">
-
-                    <input type="text" placeholder="Search.." name="search">
-                    <button type="submit"><i class="fa fa-search"></i></button>
-                    <div class="icons">
-                        <a class="kir2" href="/wishes" style="margin-left: 15px">
-                            <img width="35" src="https://cdn-icons-png.flaticon.com/128/3916/3916579.png"> Избранные
-                        </a>
-                        <a class="kir" href="/login">
-                            <img width="35" src="https://cdn-icons-png.flaticon.com/128/3917/3917688.png">Войти
-                        </a>
-
-                    </div>
-
-
-                </form>
-
-
-            </div>
-            <div class="categories">
-                <ul class="content-ul">
-                    {% for category in categories %}
-                        <li>
-                            <a href="">{{ category.title }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-            <div class="cont">
-                <h1>Popular Phones</h1>
-                {% for product in products %}
-                    <div class="popular">
-                        <a class="popular_product" href={{ product.url }}>
-                            <img src="{{ product.photo }}" alt="photo">
-                            <div>
-                                <p>{{ product.title }}</p>
-                                <p>{{ product.price }}</p>
-                            </div>
-                        </a>
-                    </div>
-                {% endfor %}
-            </div>
-        </main>
     </div>
+
+    <main>
+        <div class="search">
+            <h1 class="kit">Price HUB</h1></a>
+            <form class="example">
+                <div>
+                    <input class="search-inp" type="text" placeholder="Search.." name="search">
+                    <div class="dropdown">
+                        <div class="dropdown-item">
+                            <img width="40px" src="${i.photo}" alt="">
+                            <div class="dropdown-title">
+                                <span>Iphone</span>
+                                <span style="font-size: 12px">12000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <button type="submit"><i class="fa fa-search"></i></button>
+            <div class="icons">
+                <a class="kir2" href="/wishes" style="margin-left: 15px">
+                    <img width="35" src="https://cdn-icons-png.flaticon.com/128/3916/3916579.png"> Избранные
+                </a>
+                <a class="kir" href="/login">
+                    <img width="35" src="https://cdn-icons-png.flaticon.com/128/3917/3917688.png">Войти
+                </a>
+
+            </div>
+
+        </div>
+        <div class="categories">
+            <ul class="content-ul">
+                {% for category in categories %}
+                <li>
+                    <a href="">{{ category.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="cont">
+            <h1>Popular Phones</h1>
+            {% for product in products %}
+            <div class="popular">
+                <a class="popular_product" href={{ product.url }}>
+                    <img src="{{ product.photo }}" alt="photo">
+                    <div>
+                        <p>{{ product.title }}</p>
+                        <p>{{ product.price }}</p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
 {% endblock %}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
