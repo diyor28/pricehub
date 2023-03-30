@@ -111,13 +111,22 @@
         .box select option {
             padding: 30px;
         }
-        .icon{
+        .search {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+            margin: 50px 0;
 
         }
+        .search input {
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid black;
 
-
-
-
+        .search-btn {
+            border-radius: 10px;
+        }
 
         .popular {
             width: 100%;
@@ -201,132 +210,133 @@
         .active {
             display: block;
         }
+
         * {
-      box-sizing: border-box;
-            }
+            box-sizing: border-box;
+        }
 
-            /* Style the search field */
-            form.example input[type=text] {
-              padding: 10px;
-              font-size: 17px;
-              border: 1px solid grey;
-              float: left;
-              width: 50%;
-              background: #f1f1f1;
-            }
+        /* Style the search field */
+        form.example input[type=text] {
+            padding: 10px;
+            font-size: 17px;
+            border: 1px solid grey;
+            float: left;
+            width: 50%;
+            background: #f1f1f1;
+        }
 
-            /* Style the submit button */
-            form.example button {
-              float: left;
-              width: 10%;
-              padding: 10px;
-              background: #2196F3;
-              color: white;
-              font-size: 17px;
-              border: 1px solid grey;
-              border-left: none; /* Prevent double borders */
-              cursor: pointer;
-            }
+        /* Style the submit button */
+        form.example button {
+            float: left;
+            width: 10%;
+            padding: 10px;
+            background: #2196F3;
+            color: white;
+            font-size: 17px;
+            border: 1px solid grey;
+            border-left: none; /* Prevent double borders */
+            cursor: pointer;
+        }
 
-            form.example button:hover {
-              background: #0b7dda;
-            }
+        form.example button:hover {
+            background: #0b7dda;
+        }
 
-            /* Clear floats */
-            form.example::after {
-              content: "";
-              clear: both;
-              display: table;
-            }
+        /* Clear floats */
+        form.example::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
 
 
-            a.kir{
-                color: blue;
-                }
+        a.kir {
+            color: blue;
+        }
 
-            a.kir2{
-                color: blue;
-                }
+        a.kir2 {
+            color: blue;
+        }
 
-            .header{
+        .header {
             display: flex;
             align-items: center;
-            }
+        }
 
-            .kit{
-            float: left; margin-right: 20px;
-            }
+        .kit {
+            float: left;
+            margin-right: 20px;
+        }
 
     </style>
 </head>
 <body>
 {% block content %}
-<div class="content">
-    <div class="box">
-        <div>
-            <a href="/">Home</a>
-            <a href="/compare">Comparing</a>
-            <a href="/categories">Categories</a>
+    <div class="content">
+        <div class="box">
+            <div>
+                <a href="/">Home</a>
+                <a href="/compare">Comparing</a>
+                <a href="/categories">Categories</a>
 
-        </div>
-    </div>
-
-    <main>
-        <div class="search">
-            <a href="/" aria-current="page" class="row middle-mbs logo-link exact-active-link active-link"
-               ui-link="ui-link" data-test-id="link__logo">
-                <h1 class="kit">Price HUB</h1></a>
-
-            <!-- Load icon library -->
-            <link rel="stylesheet"
-                  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-            <!-- The form -->
-            <form class="example" action="action_page.php">
-
-                <input type="text" placeholder="Search.." name="search">
-                <button type="submit"><i class="fa fa-search"></i></button>
-                <div class="icons">
-                    <a class="kir2" href="/wishes"  style="margin-left: 15px">
-                        <img width="35" src="https://cdn-icons-png.flaticon.com/128/3916/3916579.png"> Избранные
-
-                    </a>
-                    <a class="kir" href="/login">
-                        <img width="35" src="https://cdn-icons-png.flaticon.com/128/3917/3917688.png">Войти
-
-
-                    </a>
-
-                </div>
-
-
-            </form>
-
-
-        </div>
-        <div class="categories">
-            <ul class="content-ul">
-                {% for category in categories %}
-                <li>
-                    <a href="">{{ category.title }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="cont">
-            <h1>Popular Phones</h1>
-            <div class="popular">
-                <a class="popular_product" href={{ i.link }}>
-                    <img src={{ i.photo }} alt="photo">
-                    <div>
-                        <p>{{ i.title }}</p>
-                        <p>{{ i.price }}</p>
-                    </div>
-                </a>
             </div>
         </div>
-    </main>
-</div>
+
+        <main>
+            <div class="search">
+                <a href="/" aria-current="page" class="row middle-mbs logo-link exact-active-link active-link"
+                   ui-link="ui-link" data-test-id="link__logo">
+                    <h1 class="kit">Price HUB</h1></a>
+
+                <!-- Load icon library -->
+                <link rel="stylesheet"
+                      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+                <!-- The form -->
+                <form class="example" action="action_page.php">
+
+                    <input type="text" placeholder="Search.." name="search">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                    <div class="icons">
+                        <a class="kir2" href="/wishes" style="margin-left: 15px">
+                            <img width="35" src="https://cdn-icons-png.flaticon.com/128/3916/3916579.png"> Избранные
+                        </a>
+                        <a class="kir" href="/login">
+                            <img width="35" src="https://cdn-icons-png.flaticon.com/128/3917/3917688.png">Войти
+                        </a>
+
+                    </div>
+
+
+                </form>
+
+
+            </div>
+            <div class="categories">
+                <ul class="content-ul">
+                    {% for category in categories %}
+                        <li>
+                            <a href="">{{ category.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="cont">
+                <h1>Popular Phones</h1>
+                {% for product in products %}
+                    <div class="popular">
+                        <a class="popular_product" href={{ product.url }}>
+                            <img src="{{ product.photo }}" alt="photo">
+                            <div>
+                                <p>{{ product.title }}</p>
+                                <p>{{ product.price }}</p>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
 {% endblock %}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
@@ -357,10 +367,6 @@
            `
         }
     }
-
-
-
-
 
 
 </script>
