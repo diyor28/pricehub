@@ -2,7 +2,7 @@ import requests
 from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):
-    help = 'Download categories from API'
+    help = 'Download categories from UZUM API'
     def handle(self, *args, **options):
             def category_box(self, categories):
                 items = []
