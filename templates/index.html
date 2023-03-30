@@ -328,47 +328,17 @@
     </main>
 </div>
 {% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-    let arr = [
-        {
-            id: 1,
-            title: "iphone12",
-            price: '120000',
-            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
-            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
-        },
-        {
-            id: 2,
-            title: "iphone12",
-            price: '120000',
-            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
-            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
-        },
-        {
-            id: 3,
-            title: "iphone12",
-            price: '120000',
-            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
-            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
-        },
-        {
-            id: 4,
-            title: "iphone14",
-            price: '120000',
-            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
-            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
-        }
-    ]
-    let result = []
-
     let inp = document.querySelector('.search-inp')
     let cont = document.querySelector('.dropdown')
     inp.onkeyup = () => {
         if (inp.value) {
             cont.classList.add('active')
-            result = arr.filter(i => i.title.includes(inp.value))
-            reload(result)
-        }else {
+            const res = axios.get(`http://localhost:8000/api/products/?q=${inp.value}`)
+            console.log(res)
+            reload(res)
+        } else {
             cont.classList.remove('active')
         }
     }
