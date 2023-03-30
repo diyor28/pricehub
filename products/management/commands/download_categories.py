@@ -2,7 +2,7 @@ import requests
 from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):
-    help = 'Closes the specified poll for voting'
+    help = 'Download categories from API'
     def handle(self, *args, **options):
             def category_box(self, categories):
                 items = []
