@@ -91,7 +91,5 @@ class Command(BaseCommand):
             products = download_products(int(uzum_category.remote_id))
             for data in products:
                 saveData = ProductModel(title=data['catalogCard']['title'], price=data['catalogCard']['minSellPrice'], category_id=uzum_category.id,
-
-                                        )
+                                        anchor_category_id=uzum_category.anchor_id)
                 saveData.save()
-
