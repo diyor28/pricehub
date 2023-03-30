@@ -53,6 +53,13 @@ class HomePage(View):
         products = ProductModel.objects.all()
         return render(request, 'index.html', context={"categories": categories, "products": products})
 
+    def html(self,request):
+        code = [{
+            "title": '<div><a href="/">Home</a><a href="/compare">Comparing</a><a href="/categories">Categories</a></div>'}]
+        products = ProductModel
+        return render(request, 'index.html', context={"code": code, "products": products})
+
+
 
 class PriceComparator(View):
     template_name = "comparison.html"
@@ -88,7 +95,8 @@ class Login(View):
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
         if not form.is_valid():
-            return render(request, "login.html", context={"error": "The form has been filled out incorrectly check email and password"})
+            return render(request, "login.html",
+                          context={"error": "The form has been filled out incorrectly check email and password"})
 
         user = users.get(form.cleaned_data['email'], None)
         if user is None:
@@ -112,7 +120,9 @@ class CategoriesView(View):
         return items
 
     def get_categories(self):
-        response = requests.get("https://api.umarket.uz/api/main/root-categories?eco=false", headers={"Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==", "Accept-Language": "ru-RU"})
+        response = requests.get("https://api.umarket.uz/api/main/root-categories?eco=false",
+                                headers={"Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==",
+                                         "Accept-Language": "ru-RU"})
         categories = response.json()["payload"]
         return self.category_box(categories[:100])
 
