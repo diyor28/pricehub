@@ -57,6 +57,8 @@ class HomePage(View):
 class PriceComparator(View):
     template_name = "comparison.html"
 
+
+
     def get(self, request, *args, **kwargs):
         phone_a = "https://api.umarket.uz/api/v2/product/231855"
         phone_b = "https://api.umarket.uz/api/v2/product/287201"
