@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 
 from pricehub.forms import LoginForm
-from products.models import ProductModel, CategoriesModel, UserModel
+from products.models import ProductModel, CategoriesModel
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
@@ -69,13 +69,7 @@ class Login(View):
         return render(request, "login.html", context={})
 
     def post(self, request, *args, **kwargs):
-        res = requests.get('http://127.0.0.1:8000/api/auth/users')
-        data = res.json()
-        for i in data:
-            if i['email'] == request.POST['email'] and i['password'] == request.POST['password']:
-                return redirect('/')
-        return render(request, "login.html", context={})
-
+        pass
 
 class CategoriesView(View):
     def category_box(self, categories):
