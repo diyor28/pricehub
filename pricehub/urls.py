@@ -8,6 +8,6 @@ urlpatterns = [
     path('', HomePage.as_view()),
     path('compare/', PriceComparator.as_view()),
     path('login/',Login.as_view()),
-    path('api/', include(router.urls)),
+    path(/', include(router.urls)),
     path('categories/', CategoriesView.as_view(), name='categories'),
 ]
