@@ -119,3 +119,4 @@ class CategoriesView(View):
     def get(self, request):
         categories = self.get_categories()
         return render(request, 'categories.html', {'categories': categories})
+
