@@ -4,19 +4,15 @@ from products.models import ProductModel
 
 
 def url(product):
-    return "https://uzum.uz/ru/product/" + product["title"] + product["remote-id"]
+    return "https://uzum.uz/ru/product/" + product.title + product.category.remote_id
+
+
+def translit(text):
+    return ""
 
 
 class Command(BaseCommand):
     help = 'Closes the specified poll for voting'
 
-    @staticmethod
-    def get_products(src="uzum"):
-        return ProductModel.objects.filter(category__source=src)
-
     def handle(self, *args, **options):
-        categories = self.get_products()
-        urls = []
-        for category in categories:
-            urls.append(url(category))
-        print(urls[0])
+        assert translit("Стиральный") == "Stiralnyj"
