@@ -326,9 +326,8 @@
     inp.onkeyup = () => {
         if (inp.value) {
             cont.classList.add('active')
-            const res = axios.get(`http://localhost:8000/api/products/?q=${inp.value}`)
-            console.log(res)
-            reload(res)
+            axios.get(`http://127.0.0.1:8000/api/products/?q=${inp.value}`)
+                .then(res => reload(res.data))
         } else {
             cont.classList.remove('active')
         }

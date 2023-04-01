@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import Form
 
 
 class AnchorCategoriesModel(models.Model):
@@ -36,3 +37,17 @@ class ProductModel(models.Model):
 
     class Meta:
         db_table = "products"
+
+
+class UserModel(models.Model):
+    email = models.CharField(max_length=50)
+    password = models.CharField(max_length=30)
+
+    def return_values(self):
+        return {
+            "email": self.email,
+            "password": self.email,
+        }
+
+    class Meta:
+        db_table = 'users'

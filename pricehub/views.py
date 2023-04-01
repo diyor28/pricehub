@@ -3,27 +3,10 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 
 from pricehub.forms import LoginForm
-from products.models import ProductModel
+from products.models import ProductModel, CategoriesModel, UserModel
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
-}
-users = {
-    "ozod@gmail.com": {
-        "firstName": "Ozod",
-        "lastName": "Shukurov",
-        "password": "1234"
-    },
-    "amir@gmail.com": {
-        "firstName": "Amir",
-        "lastName": "Akhtamov",
-        "password": "qwerty123"
-    },
-    "ibrogim@gmail.com": {
-        "firstName": "Ibrogim",
-        "lastName": "Miraliev",
-        "password": "pass123"
-    }
 }
 
 
@@ -86,19 +69,12 @@ class Login(View):
         return render(request, "login.html", context={})
 
     def post(self, request, *args, **kwargs):
-        form = LoginForm(request.POST)
-        if not form.is_valid():
-            return render(request, "login.html", context={"error": "The form has been filled out incorrectly check email and password"})
-
-        user = users.get(form.cleaned_data['email'], None)
-        if user is None:
-            return render(request, "login.html", context={"error": "login is incorrect"})
-
-        saved_password = user["password"]
-        if form.cleaned_data['password'] != saved_password:
-            return render(request, "login.html", context={"error": "password is incorrect"})
-
-        return redirect('/')
+        res = requests.get('http://127.0.0.1:8000/api/auth/users')
+        data = res.json()
+        for i in data:
+            if i['email'] == request.POST['email'] and i['password'] == request.POST['password']:
+                return redirect('/')
+        return render(request, "login.html", context={})
 
 
 class CategoriesView(View):
@@ -112,7 +88,9 @@ class CategoriesView(View):
         return items
 
     def get_categories(self):
-        response = requests.get("https://api.umarket.uz/api/main/root-categories?eco=false", headers={"Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==", "Accept-Language": "ru-RU"})
+        response = requests.get("https://api.umarket.uz/api/main/root-categories?eco=false",
+                                headers={"Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==",
+                                         "Accept-Language": "ru-RU"})
         categories = response.json()["payload"]
         return self.category_box(categories[:100])
 
