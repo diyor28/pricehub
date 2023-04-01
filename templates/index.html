@@ -127,6 +127,7 @@
 
         .popular_product {
             width: 24%;
+
             border-radius: 10px;
             padding: 15px;
             padding-bottom: 30px;
@@ -268,7 +269,7 @@
             width:30%;
             border: #FFFFFF;
             border-radius: 5px 5px 5px 5px;
-            padding-top:8px;
+
             padding-left:15px;
             display: flex;
             align-items: center;
@@ -281,31 +282,35 @@
             transition:0.5s;
             }
             .loop:hover{
-            transform:scale(1.05);
+            transform:scale(1.02);
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            .footer-clean{
+            height:90%;
+            display:flex;
+            justify-content:center;
+            }
+            .container1{
+            justify-content:center;
+            }
+            .row-justify-content-center{
+            display: flex;
+            align-items: start;
+            justify-content: space-around;
+            width: 100%;
+            gap: 10%;
+            }
+            .footer-clean{
+            display: flex;
+            align-items: start;
+            width: 100%;
+            }
+            footer {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            border: red;
+            border-radius: 5px 5px 5px 5px;
+            }
 
 
 
@@ -340,12 +345,14 @@
             <div class="link">
                 <a class="button" href="/wishes">
                     <img width="25px"
-                         src="https://cdn-icons.flaticon.com/svg/3917/3917711.svg?token=exp=1680290852~hmac=b9cedb0883ba166d2f86d4dbfeed908f">
+                         src="https://cdn-icons.flaticon.com/svg/3916/3916580.svg?token=exp=1680290852~hmac=ed92c5b6e32be25a8ce8d9664ddfab0e">
+
                     <i class="hide1">wishes</i>
                 </a>
                 <a class="button" href="/login">
                     <img width="25px"
-                         src="https://cdn-icons.flaticon.com/svg/3916/3916580.svg?token=exp=1680290852~hmac=ed92c5b6e32be25a8ce8d9664ddfab0e">
+                         src="https://cdn-icons.flaticon.com/svg/3917/3917711.svg?token=exp=1680290852~hmac=b9cedb0883ba166d2f86d4dbfeed908f">
+
                     <i class="hide2">log-in</i>
                 </a>
             </div>
@@ -370,9 +377,46 @@
             <a class="popular_product" href="">
                 <img src={{ product.photo }} alt="photo" class="loop">
                 <p>{{ product.title }}</p>
+
             </a>
             {% endfor %}
         </div>
+    </div>
+    <div class="footer-clean">
+        <footer>
+            <div class="container1">
+                <div class="row-justify-content-center">
+                    <div class="col-sm-4 col-md-3 item">
+                        <h3>Services</h3>
+                        <ul>
+                            <li><a href="#">Web design</a></li>
+                            <li><a href="#">Development</a></li>
+                            <li><a href="#">Hosting</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4 col-md-3 item">
+                        <h3>About</h3>
+                        <ul>
+                            <li><a href="#">Company</a></li>
+                            <li><a href="#">Team</a></li>
+                            <li><a href="#">Legacy</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4 col-md-3 item">
+                        <h3>Careers</h3>
+                        <ul>
+                            <li><a href="#">Job openings</a></li>
+                            <li><a href="#">Employee success</a></li>
+                            <li><a href="#">Benefits</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div style=" width: 100%; text-align: center; margin-top: 50px; margin-bottom: 20px;  border: black; border-radius: 5px 5px 5px 5px" class="col-lg-3 item social">
+                    <a href="#"><i class="icon ion-social-facebook"></i></a>
+                    <p class="copyright">We-pro © 2023</p>
+                </div>
+            </div>
+        </footer>
     </div>
 
 </div>
@@ -442,14 +486,7 @@
 
 
 
-
-
-
-
-
-
-
-
 </script>
+
 </body>
 </html>
