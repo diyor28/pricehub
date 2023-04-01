@@ -39,9 +39,9 @@ class Command(BaseCommand):
         categories_view = CategoriesView()
         categories = categories_view.get_categories()
         for category in categories:
-            save_data = CategoriesModel(title = category["title"],
-                                        remote_id = category["id"],
-                                        source = "uzum"
+            save_data = CategoriesModel(title=category["title"],
+                                        remote_id=category["id"],
+                                        source="uzum"
                                         )
             save_data.save()
         self.stdout.write(self.style.SUCCESS('Categories downloaded successfully.'))
