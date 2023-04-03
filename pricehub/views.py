@@ -35,36 +35,17 @@ class HomePage(View):
             {"title": "Auto Parts"},
             {"title": "Babies & Kids"}
         ]
-        products = ProductModel.objects.all()
-        return render(request, 'index.html', context={"categories": categories, "products": products})
+        return render(request, 'index.html', context={"categories": categories})
 
 
 class PriceComparator(View):
     template_name = "comparison.html"
 
-
-
     def get(self, request, *args, **kwargs):
-        phone_a = "https://api.umarket.uz/api/v2/product/231855"
-        phone_b = "https://api.umarket.uz/api/v2/product/287201"
-        response_a = requests.get(phone_a, headers=headers).json()
-        response_b = requests.get(phone_b, headers=headers).json()
-        product_a = response_a["payload"]["data"]
-        product_b = response_b["payload"]["data"]
-        context = {
-            "phoneA": {
-                "title": product_a["title"],
-                "url": product_a["photos"][0]["photo"]["800"]["high"],
-                "CPU": product_a["attributes"][0],
-                "mainCam": product_a["attributes"][8]
-            },
-            "phoneB": {
-                "title": product_b["title"],
-                "url": product_b["photos"][0]["photo"]["800"]["high"],
-                "CPU": product_b["attributes"][1],
-                "mainCam": product_b["attributes"][3]
-            }
-        }
+        products = ProductModel.objects.all()[:2]
+        phoneA = products[0]
+        phoneB = products[1]
+        context = {'products': products, 'phoneA': phoneA, 'phoneB': phoneB}
         return render(request, "comparison.html", context=context)
 
 
@@ -95,3 +76,5 @@ class CategoriesView(View):
     def get(self, request):
         categories = get_categories()
         return render(request, 'categories.html', {'categories': categories})
+
+

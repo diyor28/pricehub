@@ -57,17 +57,21 @@
         .box div a {
             color: white;
         }
-        .compare-box{
-            width: 90%;
+
+        .compare-box {
+            width: 100%;
             display: flex;
             gap: 50px;
+            margin-left: 10%;
         }
-        .compare-item{
+
+        .compare-item {
             display: flex;
             flex-direction: column;
         }
-        .compare-item img{
-            width: 300px;
+
+        .compare-item img {
+            width: 250px;
         }
     </style>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
@@ -85,12 +89,12 @@
     <main>
         <div class="compare-box">
             <div class="compare-item">
-                <img src="{{ phoneA.url }}" alt="Phone A Image">
+                <img src="{{ phoneA.photo }}" alt="Phone A Image">
                 <h2>{{ phoneA.title }}</h2>
             </div>
-            <h1 style="margin-top: 230px; font-size: 35px">VS</h1>
+            <h2 style="font-size: 40px; margin-top: 150px">VS</h2>
             <div class="compare-item">
-                <img src="{{ phoneB.url }}" alt="Phone B Image">
+                <img src="{{ phoneB.photo }}" alt="Phone A Image">
                 <h2>{{ phoneB.title }}</h2>
             </div>
         </div>
