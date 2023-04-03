@@ -1,9 +1,11 @@
 import requests
 from django.shortcuts import render, redirect
 from django.views.generic import View
-
 from pricehub.forms import LoginForm
 from products.models import ProductModel, CategoriesModel
+from products.management.commands.download_categories import get_categories
+from products.models import ProductModel
+
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36", "authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA=="
@@ -91,5 +93,5 @@ class CategoriesView(View):
         return self.category_box(categories[:100])
 
     def get(self, request):
-        categories = self.get_categories()
+        categories = get_categories()
         return render(request, 'categories.html', {'categories': categories})
