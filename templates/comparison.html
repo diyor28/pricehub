@@ -215,7 +215,7 @@
         <main>
             <div class="compare">
                 <div class="compare-block">
-                    {% for compare in comparison %}
+                    {% for phoneA in context %}
                         <div class="compare-inside">
                             <div class="block">
                                 <img src={{ phoneA.url }} alt={{ phoneA.title }}>
@@ -241,7 +241,7 @@
 {#                                +#}
 {#                            </div>#}
 {#                        </div>#}
-                    {% endif %}
+{#                    {% endif %}#}
                 </div>
                 <div style="position: relative" class="compare-table">
                     <table style="position: sticky; top: 0%; width: 100%">
