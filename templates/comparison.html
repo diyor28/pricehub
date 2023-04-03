@@ -215,7 +215,7 @@
         <main>
             <div class="compare">
                 <div class="compare-block">
-                    {% if isSelected %}
+                    {% for compare in comparison %}
                         <div class="compare-inside">
                             <div class="block">
                                 <img src={{ phoneA.url }} alt={{ phoneA.title }}>
@@ -231,16 +231,16 @@
                                 </div>
                             </div>
                         </div>
-                    {% else %}
-                        <div class="compare-inside">
-                            <div class="blockSelect">
-                                +
-                            </div>
-                            <span style="font-size: 44px">VS</span>
-                            <div class="blockSelect">
-                                +
-                            </div>
-                        </div>
+                    {% endfor %}
+{#                        <div class="compare-inside">#}
+{#                            <div class="blockSelect">#}
+{#                                +#}
+{#                            </div>#}
+{#                            <span style="font-size: 44px">VS</span>#}
+{#                            <div class="blockSelect">#}
+{#                                +#}
+{#                            </div>#}
+{#                        </div>#}
                     {% endif %}
                 </div>
                 <div style="position: relative" class="compare-table">

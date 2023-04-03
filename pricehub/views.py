@@ -6,7 +6,7 @@ from pricehub.forms import LoginForm
 from products.models import ProductModel, CategoriesModel
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36", "authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA=="
 }
 
 
