@@ -1,6 +1,4 @@
 from django.db import models
-from django.forms import Form
-from django.utils.text import slugify
 
 
 class AnchorCategoriesModel(models.Model):
@@ -32,15 +30,9 @@ class ProductModel(models.Model):
     url = models.URLField(null=True)
     anchor_category = models.ForeignKey(AnchorCategoriesModel, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(CategoriesModel, on_delete=models.SET_NULL, null=True)
-    slug = models.SlugField(blank=True, null=True)
 
     def __str__(self):
         return f"Product(title = {self.title})"
 
     class Meta:
         db_table = "products"
-
-    def save(self, *args, **kwargs):
-        if not self.slug and self.title:
-            self.slug = slugify(self.title)
-        super(ProductModel, self).save(*args, **kwargs)

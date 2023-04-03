@@ -41,12 +41,14 @@ class HomePage(View):
 class PriceComparator(View):
     template_name = "comparison.html"
 
-    def get(self, request, *args, **kwargs):
-        products = ProductModel.objects.all()[:2]
-        phoneA = products[0]
-        phoneB = products[1]
-        context = {'products': products, 'phoneA': phoneA, 'phoneB': phoneB}
-        return render(request, "comparison.html", context=context)
+    def get(self, request, p_id: int, *args, **kwargs):
+        # products = ProductModel.objects.get()
+        print(p_id)
+        products = []
+        # phoneA = {}
+        # phoneB = {}
+        # context = {'products': products, 'phoneA': phoneA, 'phoneB': phoneB}
+        # return render(request, "comparison.html", context=context)
 
 
 class Login(View):
