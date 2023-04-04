@@ -55,4 +55,4 @@ class Command(BaseCommand):
     help = 'Closes the specified poll for voting'
 
     def handle(self, *args, **options):
-        assert translit("кукла") == "Kukla"
+        assert translit("Стиральная") == "Stiralnaya"
