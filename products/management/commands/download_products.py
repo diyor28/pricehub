@@ -85,7 +85,7 @@ class Command(BaseCommand):
     help = 'Closes the specified poll for voting'
 
     def handle(self, *args, **options):
-        uzum_categories = CategoriesModel.objects.filter(source='uzum')
+        uzum_categories = CategoriesModel.objects.filter(source='uzum'[:5])
         for uzum_category in uzum_categories:
             products = download_products(int(uzum_category.remote_id))
             for data in products:

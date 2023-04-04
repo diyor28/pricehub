@@ -18,6 +18,5 @@ class ProductsViewSet(viewsets.ModelViewSet):
         queryset = ProductModel.objects.filter(title__contains=self.request.query_params['q'])
         return queryset
 
-
 router = routers.DefaultRouter()
 router.register(r'products', ProductsViewSet, basename='products')
