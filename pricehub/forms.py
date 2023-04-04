@@ -12,4 +12,4 @@ class LoginForm(Form):
     def clean_password(self):
         password = self.cleaned_data['password'].strip()
 
-        return {"username": username, "password": password}
+        return password.strip()

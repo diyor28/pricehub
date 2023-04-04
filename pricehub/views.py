@@ -2,8 +2,11 @@ import requests
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
+from pricehub.forms import LoginForm
 from products.management.commands.download_categories import get_categories
 from products.models import ProductModel
+from django.contrib.auth import login, authenticate
+from django.contrib import messages
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
@@ -69,7 +72,20 @@ class Login(View):
         return render(request, "login.html", context={})
 
     def post(self, request, *args, **kwargs):
-        pass
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            print(user)
+            if user:
+                login(request, user)
+                messages.success(request, f'Hi {username.title()}, welcome back!')
+                return redirect('/')
+
+            # form is not valid or user is not authenticated
+            messages.error(request, f'Invalid username or password')
+        return redirect('/categories')
 
 
 class CategoriesView(View):
