@@ -122,7 +122,7 @@
             <form method="POST">
                 {% csrf_token %}
                 <h1>Sing In</h1>
-                <input type="email" placeholder="email" name="email">
+                <input type="text" placeholder="username" name="username">
                 <input type="password" placeholder="password" name="password">
                 <p style="color: red">{{ error }}</p>
                 <button class="submit_btn" type="submit">Вход</button>
