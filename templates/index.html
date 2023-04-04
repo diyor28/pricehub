@@ -312,12 +312,96 @@
             border-radius: 5px 5px 5px 5px;
             }
 
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            list-style: none;
+            display: inline-block;
+            float: left;
+        }
+
+        .window {
+            overflow: hidden;
+            position: relative;
+            width: 25000px;
+            height: 143px;
+            right: 0px;
+        }
+
+        .wraper {
+            position: relative;
+            margin: auto;
+            margin-top: 250px;
+            width: 408px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            border: 4px solid #1a96b7;
+            border-radius: 2px;
+        }
+
+        .list {
+            position: relative;
+            margin-left: 230;
+            display: inline-block;
+        }
+
+        .list li {
+            border: 4px solid transparent ;
+        }
+        .list li img {
+            width: 130px;
+            height: 130px;
+        }
+
+        .arrowup {
+            position: absolute;
+            bottom: 0;
+            right: 200px;
+            z-index: 1;
+            width: 0;
+            height: 0;
+            border-bottom: 20px solid #1a96bf;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+        }
+
+        .arrowdown {
+            position: absolute;
+            top: 0;
+            right: 200px;
+            z-index: 1;
+            width: 0;
+            height: 0;
+            border-top: 20px solid #1a96bf;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+        }
 
 
 
     </style>
 </head>
 <body>
+
+<div class="wraper">
+    <div class="arrowup"></div>
+    <div class="arrowdown"></div>
+    <div class="window">
+        <ul class="list">
+
+        </ul>
+
+        <ul class="list">
+            <li><img src="https://uzum.uz/uzautomotors" alt=""></li>
+            <li><img src="https://uzum.uz/category/Vse-kategorii--121" alt=""></li>
+            <li><img src="https://uzum.uz/product/Finiki-Handa-Kalooteh-dates-450-g-334401" alt=""></li>
+            <li><img src="https://uzum.uz/product/Mini-Dreams-Cakharnoe-234359" alt=""></li>
+            <li><img src="https://uzum.uz/product/Podsolnechnoe-maslo-Schedroe-195074" alt=""></li>
+            <li><img src="https://uzum.uz/product/Futbolka-Base-Unisex-s-korotkim-rukavom-142241" alt=""></li>
+        </ul>
+    </div>
+
 {% block content %}
 <div class="content">
     <div class="box">
@@ -405,6 +489,17 @@
                     <div class="col-sm-4 col-md-3 item">
                         <h3>Careers</h3>
                         <ul>
+
+                            <ul class="list">
+            <li><img src="https://uzum.uz/uzautomotors" alt=""></li>
+            <li><img src="https://uzum.uz/category/Vse-kategorii--121" alt=""></li>
+            <li><img src="https://uzum.uz/product/Finiki-Handa-Kalooteh-dates-450-g-334401" alt=""></li>
+            <li><img src="https://uzum.uz/product/Mini-Dreams-Cakharnoe-234359" alt=""></li>
+            <li><img src="https://uzum.uz/product/Podsolnechnoe-maslo-Schedroe-195074" alt=""></li>
+            <li><img src="https://uzum.uz/product/Futbolka-Base-Unisex-s-korotkim-rukavom-142241" alt=""></li>
+        </ul>
+
+
                             <li><a href="#">Job openings</a></li>
                             <li><a href="#">Employee success</a></li>
                             <li><a href="#">Benefits</a></li>
@@ -414,6 +509,13 @@
                 <div style=" width: 100%; text-align: center; margin-top: 50px; margin-bottom: 20px;  border: black; border-radius: 5px 5px 5px 5px" class="col-lg-3 item social">
                     <a href="#"><i class="icon ion-social-facebook"></i></a>
                     <p class="copyright">We-pro © 2023</p>
+                    <p style="text-align: center">
+    <button class="button">Кнопка</button>
+<div class="win">
+    <ul>
+
+    </ul>
+</div>
                 </div>
             </div>
         </footer>
@@ -422,6 +524,22 @@
 </div>
 {% endblock %}
 <script>
+
+        (function() {
+        for (var i = 0; i < 3; i++) {
+            Array.from(document.getElementsByClassName("list")).forEach(e => e.append())
+        }
+        document.getElementsByClassName('button')[0].addEventListener('click', () => {
+            document.getElementsByClassName('window')[0].style.right = 0;
+            document.querySelectorAll('.list li')[0].style.border = "4px solid transparent";
+            const x = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+            document.getElementsByClassName('list')[1].getElementsByTagName('li')[x].style.border = "4px solid #00ba00";
+            document.getElementsByClassName('window')[0].style.right = ((x*130)+(x*8-12)-119)+"px";
+        });
+
+
+    }());
+
     let arr = [
         {
             id: 1,
