@@ -229,7 +229,7 @@
 
             .searchTerm:focus{
 
-              color: #00B4CC;
+              color: black;
             }
 
             .searchButton {
@@ -324,7 +324,7 @@
               transition: ease .25s;
             }
 
-<<<<<<< HEAD
+
             .footer-distributed .footer-links a:before {
               content: "·";
               font-size: 20px;
@@ -375,7 +375,7 @@
             }
 
 
-=======
+
             padding: 0;
             margin: 0;
         }
@@ -449,24 +449,7 @@
 </head>
 <body>
 
-<div class="wraper">
-    <div class="arrowup"></div>
-    <div class="arrowdown"></div>
-    <div class="window">
-        <ul class="list">
 
-        </ul>
-
-        <ul class="list">
-            <li><img src="https://uzum.uz/uzautomotors" alt=""></li>
-            <li><img src="https://uzum.uz/category/Vse-kategorii--121" alt=""></li>
-            <li><img src="https://uzum.uz/product/Finiki-Handa-Kalooteh-dates-450-g-334401" alt=""></li>
-            <li><img src="https://uzum.uz/product/Mini-Dreams-Cakharnoe-234359" alt=""></li>
-            <li><img src="https://uzum.uz/product/Podsolnechnoe-maslo-Schedroe-195074" alt=""></li>
-            <li><img src="https://uzum.uz/product/Futbolka-Base-Unisex-s-korotkim-rukavom-142241" alt=""></li>
-        </ul>
-    </div>
-</div>
 {% block content %}
 <div class="content">
     <div class="box">
@@ -478,6 +461,7 @@
         </div>
 
     </div>
+
 
 
     <div class="wrap">
@@ -507,6 +491,7 @@
             </div>
 
 
+
         </div>
     </div>
 
@@ -525,7 +510,8 @@
             {%for product in products%}
             <a class="popular_product" href="">
                 <img src={{ product.photo }} alt="photo" class="loop">
-                <p>{{ product.title }}</p>
+                <p style="padding:10px">{{ product.title }}</p>
+                <p style="padding:10px">Price:   {{ product.price }}</p>
 
             </a>
             {% endfor %}
@@ -541,9 +527,9 @@
                 <a href="/"><img width="25px" src="https://cdn-icons-png.flaticon.com/512/1384/1384015.png"></a>
                 <a href="/"><img width="25px" src="https://cdn-icons-png.flaticon.com/512/10110/10110386.png"> </a>
                 <a href="/"><img width="25px" src="https://cdn-icons-png.flaticon.com/512/733/733609.png"></a>
-
-
-
+                <div class="price">
+                    <h3>price_hub-2023</h3>
+                </div>
         </footer>
 
     </div>
