@@ -1,3 +1,5 @@
+import threading
+
 import requests
 from django.core.management import BaseCommand
 
@@ -14,10 +16,8 @@ class Command(BaseCommand):
 
     @timeit
     def handle(self, *args, **options):
-        collected = set()
+        collected = []
         # your code goes here
-        futures = []
-
         assert len(collected) == len(emojis)
         assert set(collected) == set(emojis)
         print('Congrats! Drinks on me')
