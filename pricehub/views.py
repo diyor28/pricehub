@@ -1,11 +1,8 @@
-import requests
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views.generic import View
-from pricehub.forms import LoginForm
-from products.models import ProductModel, CategoriesModel
+
 from products.management.commands.download_categories import get_categories
 from products.models import ProductModel
-
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36", "authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA=="
@@ -43,7 +40,7 @@ class PriceComparator(View):
 
     def get(self, request, p_id: int, p2_id: int, *args, **kwargs):
         # print(p_id)
-        productA = ProductModel.objects.get(id=p_id )
+        productA = ProductModel.objects.get(id=p_id)
         productB = ProductModel.objects.get(id=p2_id)
         context = {'productA': productA, 'productB': productB}
         # print(p_id)
@@ -61,9 +58,8 @@ class Login(View):
     def post(self, request, *args, **kwargs):
         pass
 
+
 class CategoriesView(View):
     def get(self, request):
         categories = get_categories()
         return render(request, 'categories.html', {'categories': categories})
-
-

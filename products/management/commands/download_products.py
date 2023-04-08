@@ -1,3 +1,5 @@
+from threading import Thread
+
 import requests
 from django.core.management.base import BaseCommand
 
@@ -81,16 +83,33 @@ def download_products(categoryId: int):
     return products
 
 
+@timeit
+def download_for_category(category):
+    products = download_products(int(category.remote_id))
+    to_be_saved = []
+    for p in products:
+        product = ProductModel(title=p['catalogCard']['title'],
+                               price=p['catalogCard']['minSellPrice'],
+                               category_id=category.id,
+                               anchor_category_id=category.anchor_id)
+        to_be_saved.append(product)
+    ProductModel.objects.bulk_create(to_be_saved)
+
+
 class Command(BaseCommand):
     help = 'Closes the specified poll for voting'
 
+    @timeit
     def handle(self, *args, **options):
-        uzum_categories = CategoriesModel.objects.filter(source='uzum'[:5])
+        ids = [1251, 1252, 1253, 1254, 1255, 1256, 1257, 1258, 1259, 1260]
+        uzum_categories = CategoriesModel.objects.filter(id__in=ids)
+        threads = []
         for uzum_category in uzum_categories:
-            products = download_products(int(uzum_category.remote_id))
-            for data in products:
-                product = ProductModel(title=data['catalogCard']['title'],
-                                       price=data['catalogCard']['minSellPrice'],
-                                       category_id=uzum_category.id,
-                                       anchor_category_id=uzum_category.anchor_id)
-                product.save()
+            p = Thread(target=download_for_category, args=[uzum_category])
+            threads.append(p)
+
+        for th in threads:
+            th.start()
+
+        for th in threads:
+            th.join()

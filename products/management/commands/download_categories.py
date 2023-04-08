@@ -19,7 +19,7 @@ def get_categories():
                             headers={"Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==",
                                      "Accept-Language": "ru-RU"})
     categories = response.json()["payload"]
-    return category_box(categories[:100])
+    return category_box(categories)
 
 
 class Command(BaseCommand):

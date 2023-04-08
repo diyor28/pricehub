@@ -1,7 +1,9 @@
-from django.urls import path, include
-from django.contrib.auth.models import User
+import random
+import time
+
 from rest_framework import routers, serializers, viewsets
-from rest_framework.filters import SearchFilter
+from rest_framework.response import Response
+
 from products.models import ProductModel
 
 
@@ -18,5 +20,31 @@ class ProductsViewSet(viewsets.ModelViewSet):
         queryset = ProductModel.objects.filter(title__contains=self.request.query_params['q'])
         return queryset
 
+
+emojis = [
+    '😀', '😃', '😄', '😁', '😆',
+    '😅', '😂', '🤣', '🥲', '🥹',
+    '😇', '🙂', '🙃', '😉', '😌',
+    # '😍', '🥰', '😘', '😗', '😙',
+    # '🥳', '😏', '😚', '😋', '😊',
+    # '😛', '😝', '😜', '🤪', '🤨',
+    # '🧐', '🤓', '😎', '🥸', '🤩',
+    # '😒', '😞', '😔', '😟', '😕',
+    # '🙁', '🫡', '🤔', '🫢', '😣',
+    # '😖', '😫', '😩', '🥺', '😢',
+    # '😭', '😮‍', '😤', '😠', '😡',
+    # '🤬', '🤯', '😳', '🥵', '🥶',
+    # '😱', '😨', '😰', '😥', '😓',
+    # '🫣', '🤗', '🤭', '🤫', '🤥'
+]
+
+
+class EmojisViewSet(viewsets.ViewSet):
+    def list(self, request):
+        time.sleep(1)
+        return Response([random.choice(emojis)], status=200)
+
+
 router = routers.DefaultRouter()
 router.register(r'products', ProductsViewSet, basename='products')
+router.register(r'emojis', EmojisViewSet, basename='emojis')
