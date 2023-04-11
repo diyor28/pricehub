@@ -1,14 +1,41 @@
-import threading
-
-import requests
 from django.core.management import BaseCommand
 
 from pricehub.products import timeit
-from products.api import emojis
 
-
-def get_emojy():
-    return requests.get('http://localhost:8000/api/emojis').json()[0]
+urls = [
+    "https://api.umarket.uz/api/v2/product/389704",
+    "https://api.umarket.uz/api/v2/product/3702",
+    "https://api.umarket.uz/api/v2/product/278740",
+    "https://api.umarket.uz/api/v2/product/380004",
+    "https://api.umarket.uz/api/v2/product/389704",
+    "https://api.umarket.uz/api/v2/product/3702",
+    "https://api.umarket.uz/api/v2/product/278740",
+    "https://api.umarket.uz/api/v2/product/380004",
+    "https://api.umarket.uz/api/v2/product/389704",
+    "https://api.umarket.uz/api/v2/product/3702",
+    "https://api.umarket.uz/api/v2/product/278740",
+    "https://api.umarket.uz/api/v2/product/380004",
+    "https://api.umarket.uz/api/v2/product/389704",
+    "https://api.umarket.uz/api/v2/product/3702",
+    "https://api.umarket.uz/api/v2/product/278740",
+    "https://api.umarket.uz/api/v2/product/380004",
+    "https://api.umarket.uz/api/v2/product/389704",
+    "https://api.umarket.uz/api/v2/product/3702",
+    "https://api.umarket.uz/api/v2/product/278740",
+    "https://api.umarket.uz/api/v2/product/380004",
+    "https://api.umarket.uz/api/v2/product/389704",
+    "https://api.umarket.uz/api/v2/product/3702",
+    "https://api.umarket.uz/api/v2/product/278740",
+    "https://api.umarket.uz/api/v2/product/380004",
+    "https://api.umarket.uz/api/v2/product/389704",
+    "https://api.umarket.uz/api/v2/product/3702",
+    "https://api.umarket.uz/api/v2/product/278740",
+    "https://api.umarket.uz/api/v2/product/380004",
+    "https://api.umarket.uz/api/v2/product/389704",
+    "https://api.umarket.uz/api/v2/product/3702",
+    "https://api.umarket.uz/api/v2/product/278740",
+    "https://api.umarket.uz/api/v2/product/380004",
+]
 
 
 class Command(BaseCommand):
@@ -16,8 +43,5 @@ class Command(BaseCommand):
 
     @timeit
     def handle(self, *args, **options):
-        collected = []
-        # your code goes here
-        assert len(collected) == len(emojis)
-        assert set(collected) == set(emojis)
+        assert len(results) == len(urls)
         print('Congrats! Drinks on me')
