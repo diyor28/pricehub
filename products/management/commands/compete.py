@@ -1,53 +1,30 @@
-from queue import Queue
+import queue
+import time
 from threading import Thread
 
-import requests
 from django.core.management import BaseCommand
 
 from pricehub.products import timeit
-from pricehub.views import headers
-
-urls = [
-    "https://api.umarket.uz/api/v2/product/389704",
-    "https://api.umarket.uz/api/v2/product/3702",
-    "https://api.umarket.uz/api/v2/product/278740",
-    "https://api.umarket.uz/api/v2/product/380004",
-    "https://api.umarket.uz/api/v2/product/389704",
-    "https://api.umarket.uz/api/v2/product/3702",
-    "https://api.umarket.uz/api/v2/product/278740",
-    "https://api.umarket.uz/api/v2/product/380004",
-    "https://api.umarket.uz/api/v2/product/389704",
-    "https://api.umarket.uz/api/v2/product/3702",
-    "https://api.umarket.uz/api/v2/product/278740",
-    "https://api.umarket.uz/api/v2/product/380004",
-    "https://api.umarket.uz/api/v2/product/389704",
-    "https://api.umarket.uz/api/v2/product/3702",
-    "https://api.umarket.uz/api/v2/product/278740",
-    "https://api.umarket.uz/api/v2/product/380004",
-    "https://api.umarket.uz/api/v2/product/389704",
-    "https://api.umarket.uz/api/v2/product/3702",
-    "https://api.umarket.uz/api/v2/product/278740",
-    "https://api.umarket.uz/api/v2/product/380004",
-    "https://api.umarket.uz/api/v2/product/389704",
-    "https://api.umarket.uz/api/v2/product/3702",
-    "https://api.umarket.uz/api/v2/product/278740",
-    "https://api.umarket.uz/api/v2/product/380004",
-    "https://api.umarket.uz/api/v2/product/389704",
-    "https://api.umarket.uz/api/v2/product/3702",
-    "https://api.umarket.uz/api/v2/product/278740",
-    "https://api.umarket.uz/api/v2/product/380004",
-    "https://api.umarket.uz/api/v2/product/389704",
-    "https://api.umarket.uz/api/v2/product/3702",
-    "https://api.umarket.uz/api/v2/product/278740",
-    "https://api.umarket.uz/api/v2/product/380004",
-]
 
 
-def do_task(task_q, res_q):
-    while not task_q.empty():
-        url = task_q.get(block=True)
-        resp = requests.get(url, headers=headers)
-        res_q.put(resp.json())
+def paint_gorshki(gorshki_q, sklad_q):
+    while True:
+        time.sleep(0.5)
+        if gorshki_q.empty():
+            break
+        gorshok = gorshki_q.get()
+        print(f"Painted gorshok #{gorshok}")
+        sklad_q.put(gorshok)
+
+
+def make_gorshki(glina_q, gorshki_q):
+    while True:
+        time.sleep(0.5)
+        if glina_q.empty():
+            break
+        gorshok = glina_q.get()
+        print(f"Made gorshok #{gorshok}")
+        gorshki_q.put(gorshok)
 
 
 class Command(BaseCommand):
@@ -55,24 +32,31 @@ class Command(BaseCommand):
 
     @timeit
     def handle(self, *args, **options):
-        task_q = Queue(maxsize=1000)
-        res_q = Queue(maxsize=1000)
-        fabrics = []
-        sklad = []
+        gonchari = []
+        painters = []
+        glina_q = queue.Queue(100)
+        gorshki_q = queue.Queue(100)
+        sklad_q = queue.Queue(100)
 
-        for url in urls:
-            task_q.put(url)
+        for i in range(100):
+            glina_q.put(i)
 
         for i in range(10):
-            th = Thread(target=do_task, args=(task_q, res_q))
+            th = Thread(target=make_gorshki, args=(glina_q, gorshki_q))
             th.start()
-            fabrics.append(th)
+            gonchari.append(th)
 
-        while len(sklad) < len(urls):
-            sklad.append(res_q.get(block=True))
+        for i in range(10):
+            th = Thread(target=paint_gorshki, args=(gorshki_q, sklad_q))
+            th.start()
+            painters.append(th)
 
-        for th in fabrics:
+        results = []
+        while len(results) < 100:
+            results.append(sklad_q.get())
+
+        for th in gonchari:
             th.join()
 
-        # your code goes here
-        assert len(sklad) == len(urls)
+        for th in painters:
+            th.join()
