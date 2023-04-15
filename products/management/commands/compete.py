@@ -6,11 +6,13 @@ from django.core.management import BaseCommand
 
 from pricehub.products import timeit
 
+paint_running = True
+
 
 def paint_gorshki(gorshki_q, sklad_q):
     while True:
         time.sleep(0.5)
-        if gorshki_q.empty():
+        if not paint_running:
             break
         gorshok = gorshki_q.get()
         print(f"Painted gorshok #{gorshok}")
@@ -18,9 +20,12 @@ def paint_gorshki(gorshki_q, sklad_q):
 
 
 def make_gorshki(glina_q, gorshki_q):
+    global paint_running
+
     while True:
         time.sleep(0.5)
         if glina_q.empty():
+            paint_running = False
             break
         gorshok = glina_q.get()
         print(f"Made gorshok #{gorshok}")
@@ -34,9 +39,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         gonchari = []
         painters = []
-        glina_q = queue.Queue(100)
-        gorshki_q = queue.Queue(100)
-        sklad_q = queue.Queue(100)
+        glina_q = queue.Queue(150)
+        gorshki_q = queue.Queue(150)
+        sklad_q = queue.Queue(150)
 
         for i in range(100):
             glina_q.put(i)
