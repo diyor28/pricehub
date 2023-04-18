@@ -16,7 +16,7 @@
 
         body {
             min-height: 100vh;
-            background: #eeeeee;
+            background: #FFFFFF;
         }
 
         .content {
@@ -29,12 +29,10 @@
         }
 
 
-        main {
-            max-width: 90%;
-            margin: 0 auto;
-        }
+
 
         .categories {
+            width:70%;
             padding-top: 50px;
             padding-bottom: 50px;
         }
@@ -141,6 +139,7 @@
 
         .popular_product {
             width: 24%;
+
             border-radius: 10px;
             padding: 15px;
             padding-bottom: 30px;
@@ -183,6 +182,7 @@
         }
 
         .cont {
+            width:70%;
             padding-bottom: 30px;
         }
 
@@ -223,35 +223,244 @@
             box-sizing: border-box;
         }
 
-        /* Style the search field */
-        form.example input {
-            padding: 10px;
-            font-size: 17px;
+
+            .search {
+              width: 100%;
+
+              display:flex;
+              padding-top:3%;
+            }
+
+            .searchTerm {
+
+              width: 90%;
+
+              border: 1px solid grey;
+              border-right: none;
+
+              padding: 5px;
+              height: 40px;
+              border-radius: 5px 0 0 5px;
+              outline: none;
+              color: #F8F8F8;
+            }
+
+        .searchTerm:focus{
+
+              color: black;
+            }
+        .searchButton {
+
+            width: 100px;
+            height: 40px;
+              border: 1px solid grey;
+            background: #F8F8F8;
+              text-align: center;
+            color: #fff;
+              border-radius: 0 5px 5px 0;
+              cursor: pointer;
+            font-size: 30px;
+              margin-right:20px;
+            }
+
+
+            .wrap{
+              width: 70%;
+              padding-left:20px;
+
+              left: 40%;
+
+            }
+            .pricehub{
+            width:40%;
+            font: italic small-caps bold 15px/1 cursive;
+            }
+
+            .link{
+            width:80%;
+            display: inline-flex;
+            gap:5%;
+
+            }
+            .button{
+            width:30%;
+
+
+            padding-left:15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            }
+            .button:hover{
+            background-color:#EFEFEF;
             border: 1px solid grey;
-            float: left;
-            width: 400px;
-            background: #f1f1f1;
+            border-radius: 5px 5px 5px 5px;
+            }
+            .loop{
+            transition:0.5s;
+            }
+            .loop:hover{
+            transform:scale(1.02);
+            }
+
+
+            .footer_1{
+            width:100%;
+
+            }
+            .footer-distributed {
+              background-color: #ECDAE1;
+              box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
+              box-sizing: border-box;
+              width: 100%;
+              text-align: left;
+              font: normal 16px sans-serif;
+              padding: 45px 50px;
+            }
+
+            .footer-distributed .footer-left p {
+              color: #8f9296;
+              font-size: 14px;
+              margin: 0;
+            }
+
+
+            .footer-distributed p.footer-links {
+              font-size: 18px;
+              font-weight: bold;
+              color: #ffffff;
+              margin: 0 0 10px;
+              padding: 0;
+              transition: ease .25s;
+            }
+
+            .footer-distributed p.footer-links a {
+              display: inline-block;
+              line-height: 1.8;
+              text-decoration: none;
+            color: inherit;
+              transition: ease .25s;
         }
 
-        /* Style the submit button */
-        form.example button {
-            float: left;
-            width: 10%;
-            padding: 10px;
-            background: #2196F3;
-            color: white;
-            font-size: 17px;
-            border: 1px solid grey;
-            border-left: none; /* Prevent double borders */
-            cursor: pointer;
-        }
 
-        form.example button:hover {
-            background: #0b7dda;
+            .footer-distributed .footer-links a:before {
+              content: "·";
+              font-size: 20px;
+              left: 0;
+              color: #fff;
+              display: inline-block;
+              padding-right: 5px;
+            }
+
+            .footer-distributed .footer-links .link-1:before {
+              content: none;
+            }
+
+            .footer-distributed .footer-right {
+              float: right;
+              margin-top: 6px;
+              max-width: 300px;
+            }
+
+            .footer-distributed .footer-right a {
+              display: inline-block;
+              width: 35px;
+              height: 35px;
+
+              background-color: #33383b;
+              border-radius: 2px;
+              font-size: 20px;
+              color: #ffffff;
+              text-align: center;
+              line-height: 40px;
+              margin-left: 10px;
+              transition:all .25s;
+            }
+
+            .footer-distributed .footer-right a:hover{transform:scale(1.1); -webkit-transform:scale(1.1);}
+
+            .footer-distributed p.footer-links a:hover{text-decoration:underline;}
+
+
+
+
+             .footer-distributed .footer-right {
+                float: none;
+                margin: 0 auto 20px;
+             }
+             .footer-distributed .footer-left p.footer-links {
+                line-height: 1.8;
+             }
+            }
+
+
+
+            padding: 0;
+            margin: 0;
         }
+        li {
+            list-style: none;
+            display: inline-block;
+            float: left;
+        }
+<!--               #slider{-->
+<!--                overflow:hidden;-->
+<!--                width:50%;-->
+
+<!--               }-->
+<!--               #slider figure{-->
+<!--               position:relative;-->
+<!--               width:100%;-->
+
+<!--               animation:20s slider infinite;-->
+<!--               margin:0;-->
+<!--               left:0;-->
+<!--               }-->
+<!--               #slider figure img {-->
+<!--               width:25%;-->
+<!--               float:left;-->
+<!--               }-->
+<!--               @keyframes slider {-->
+<!--               0%{-->
+<!--               left:0;-->
+<!--               }-->
+<!--               20%{-->
+<!--               left:0;-->
+<!--               }-->
+<!--               25%{-->
+<!--               left:-100%;-->
+<!--               }-->
+<!--               45%{-->
+<!--               left:-100%;-->
+
+<!--               }-->
+<!--               50%{-->
+<!--               left:-200%;-->
+<!--               }-->
+<!--               70%{-->
+<!--               left:-200%;-->
+<!--               }-->
+<!--               75%{-->
+<!--               left:-300%;-->
+<!--               }-->
+<!--               90%{-->
+<!--               left:-300%;-->
+<!--               }-->
+<!--               100%{-->
+<!--               left:-400%;-->
+<!--               }-->
+
+<!--               }-->
+
+
+
+
+
     </style>
 </head>
 <body>
+
+
 {% block content %}
 <div class="content">
     <div class="box">
@@ -260,66 +469,151 @@
             <a href="/compare">Comparing</a>
             <a href="/categories">Categories</a>
         </div>
+
     </div>
 
-    <main>
+
+
+    <div class="wrap">
+
         <div class="search">
-            <h1 class="kit">Price HUB</h1></a>
-            <form class="example">
-                <div>
-                    <input class="search-inp" type="text" placeholder="Search.." name="search">
-                    <div class="dropdown">
-                        <div class="dropdown-item">
-                            <img width="40px" src="${i.photo}" alt="">
-                            <div class="dropdown-title">
-                                <span>Iphone</span>
-                                <span style="font-size: 12px">12000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            <a href="/" class="pricehub"><h1>Price Hub</h1></a>
+            <input type="text" class="searchTerm" placeholder="What are you looking for?">
+            <button type="submit" class="searchButton">
+                <img width="20"
+                     src="https://cdn-icons.flaticon.com/svg/3917/3917132.svg?token=exp=1680284458~hmac=c16b4421a3f16184c520b8fcb6aed42a">
 
-            <button type="submit"><i class="fa fa-search"></i></button>
-            <div class="icons">
-                <a class="kir2" href="/wishes" style="margin-left: 15px">
-                    <img width="35" src="https://cdn-icons-png.flaticon.com/128/3916/3916579.png"> Избранные
+                <i class="fa fa-search"></i>
+            </button>
+            <div class="link">
+                <a class="button" href="/wishes">
+                    <img width="25px"
+                         src="https://cdn-icons.flaticon.com/svg/3916/3916580.svg?token=exp=1680290852~hmac=ed92c5b6e32be25a8ce8d9664ddfab0e">
+
+                    <i class="hide1">wishes</i>
                 </a>
-                <a class="kir" href="/login">
-                    <img width="35" src="https://cdn-icons-png.flaticon.com/128/3917/3917688.png">Войти
-                </a>
+                <a class="button" href="/login">
+                    <img width="25px"
+                         src="https://cdn-icons.flaticon.com/svg/3917/3917711.svg?token=exp=1680290852~hmac=b9cedb0883ba166d2f86d4dbfeed908f">
 
-            </div>
-
-        </div>
-        <div class="categories">
-            <ul class="content-ul">
-                {% for category in categories %}
-                <li>
-                    <a href="">{{ category.title }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="cont">
-            <h1>Popular Phones</h1>
-            {% for product in products %}
-            <div class="popular">
-                <a class="popular_product" href={{ product.url }}>
-                    <img src="{{ product.photo }}" alt="photo">
-                    <div>
-                        <p>{{ product.title }}</p>
-                        <p>{{ product.price }}</p>
-                    </div>
+                    <i class="hide2">log-in</i>
                 </a>
             </div>
+
+
+
+        </div>
+    </div>
+
+<!--    <div id="slider">-->
+<!--        <figure>-->
+<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
+<!--            <img src="https://images.uzum.uz/cgjistvhj8j9g69bkqb0/t_product_540_high.jpg#1680898983556">-->
+<!--            <img src="https://images.uzum.uz/cgk7mr7g49devoacckvg/t_product_540_high.jpg#1680898983559">-->
+<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
+<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
+<!--            <img src="https://images.uzum.uz/cgjistvhj8j9g69bkqb0/t_product_540_high.jpg#1680898983556">-->
+<!--            <img src="https://images.uzum.uz/cgk7mr7g49devoacckvg/t_product_540_high.jpg#1680898983559">-->
+<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
+<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
+<!--            <img src="https://images.uzum.uz/cgjistvhj8j9g69bkqb0/t_product_540_high.jpg#1680898983556">-->
+<!--            <img src="https://images.uzum.uz/cgk7mr7g49devoacckvg/t_product_540_high.jpg#1680898983559">-->
+<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
+<!--        </figure>-->
+
+<!--    </div>-->
+
+    <div class="categories">
+        <ul class="content-ul">
+            {% for category in categories %}
+            <li>
+                <a class="categories-one" href="">{{ category.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="cont">
+        <h1>Popular Phones</h1>
+        <div class="popular">
+            {%for product in products%}
+            <a class="popular_product" href="">
+                <img src={{ product.photo }} alt="photo" class="loop">
+                <p style="padding:10px">{{ product.title }}</p>
+                <p style="padding:10px">Price:   {{ product.price }}</p>
+
+            </a>
             {% endfor %}
         </div>
-    </main>
+    </div>
+
+    <div class="footer_1">
+        <footer class="footer-distributed">
+
+            <div class="footer-right">
+
+                <a href="/"><img  width="25px" src="https://cdn-icons-png.flaticon.com/512/2111/2111710.png"></a>
+                <a href="/"><img width="25px" src="https://cdn-icons-png.flaticon.com/512/1384/1384015.png"></a>
+                <a href="/"><img width="25px" src="https://cdn-icons-png.flaticon.com/512/10110/10110386.png"> </a>
+                <a href="/"><img width="25px" src="https://cdn-icons-png.flaticon.com/512/733/733609.png"></a>
+                <div class="price">
+                    <h3>price_hub-2023</h3>
+                </div>
+        </footer>
+
+    </div>
+
 </div>
 {% endblock %}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+
+        (function() {
+        for (var i = 0; i < 3; i++) {
+            Array.from(document.getElementsByClassName("list")).forEach(e => e.append())
+        }
+        document.getElementsByClassName('button')[0].addEventListener('click', () => {
+            document.getElementsByClassName('window')[0].style.right = 0;
+            document.querySelectorAll('.list li')[0].style.border = "4px solid transparent";
+            const x = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+            document.getElementsByClassName('list')[1].getElementsByTagName('li')[x].style.border = "4px solid #00ba00";
+            document.getElementsByClassName('window')[0].style.right = ((x*130)+(x*8-12)-119)+"px";
+        });
+
+
+    }());
+
+    let arr = [
+        {
+            id: 1,
+            title: "iphone12",
+            price: '120000',
+            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
+            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
+        },
+        {
+            id: 2,
+            title: "iphone12",
+            price: '120000',
+            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
+            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
+        },
+        {
+            id: 3,
+            title: "iphone12",
+            price: '120000',
+            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
+            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
+        },
+        {
+            id: 4,
+            title: "iphone14",
+            price: '120000',
+            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
+            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
+        }
+    ]
+    let result = []
+
     let inp = document.querySelector('.search-inp')
     let cont = document.querySelector('.dropdown')
     inp.onkeyup = () => {
@@ -346,6 +640,14 @@
            `
         }
     }
+
+
+
+
+
+
+
 </script>
+
 </body>
 </html>

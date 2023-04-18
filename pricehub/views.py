@@ -1,4 +1,3 @@
-import requests
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
@@ -9,7 +8,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib import messages
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36", "authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA=="
 }
 
 
@@ -36,35 +35,17 @@ class HomePage(View):
             {"title": "Auto Parts"},
             {"title": "Babies & Kids"}
         ]
-        products = ProductModel.objects.all()
-        return render(request, 'index.html', context={"categories": categories, "products": products})
+        return render(request, 'index.html', context={"categories": categories})
 
 
 class PriceComparator(View):
     template_name = "comparison.html"
 
-    def get(self, request, *args, **kwargs):
-        phone_a = "https://api.umarket.uz/api/v2/product/231855"
-        phone_b = "https://api.umarket.uz/api/v2/product/287201"
-        response_a = requests.get(phone_a, headers=headers).json()
-        response_b = requests.get(phone_b, headers=headers).json()
-        product_a = response_a["payload"]["data"]
-        product_b = response_b["payload"]["data"]
-        context = {
-            "phoneA": {
-                "title": product_a["title"],
-                "url": product_a["photos"][0]["photo"]["800"]["high"],
-                "CPU": product_a["attributes"][0],
-                "mainCam": product_a["attributes"][8]
-            },
-            "phoneB": {
-                "title": product_b["title"],
-                "url": product_b["photos"][0]["photo"]["800"]["high"],
-                "CPU": product_b["attributes"][1],
-                "mainCam": product_b["attributes"][3]
-            }
-        }
-        return render(request, "comparison.html", context=context)
+    def get(self, request, p_id: int, p2_id: int, *args, **kwargs):
+        productA = ProductModel.objects.get(id=p_id)
+        productB = ProductModel.objects.get(id=p2_id)
+        context = {'productA': productA, 'productB': productB}
+        return render(request, "comparison.html", context)
 
 
 class Login(View):
@@ -86,6 +67,7 @@ class Login(View):
             # form is not valid or user is not authenticated
             messages.error(request, f'Invalid username or password')
         return redirect('/categories')
+
 
 
 class CategoriesView(View):

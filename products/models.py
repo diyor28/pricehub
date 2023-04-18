@@ -1,5 +1,4 @@
 from django.db import models
-from django.forms import Form
 
 
 class AnchorCategoriesModel(models.Model):
@@ -33,7 +32,7 @@ class ProductModel(models.Model):
     category = models.ForeignKey(CategoriesModel, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f"Product(title = {self.title})"
+        return f"Product(title = {self.title}, photo={self.photo})"
 
     class Meta:
         db_table = "products"

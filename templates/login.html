@@ -121,9 +121,15 @@
         <main>
             <form method="POST">
                 {% csrf_token %}
+<<<<<<< HEAD
                 <h1>Sing In</h1>
                 <input type="text" placeholder="username" name="username">
                 <input type="password" placeholder="password" name="password">
+=======
+                <h1>Вход</h1>
+                <input type="email" placeholder="Эл. почта" name="email">
+                <input type="password" placeholder="Пароль" name="password">
+>>>>>>> e70524bae095b8be0d8f9988acd0910f55cdc9a6
                 <p style="color: red">{{ error }}</p>
                 <button class="submit_btn" type="submit">Вход</button>
             </form>
