@@ -3,6 +3,7 @@ from threading import Thread
 import requests
 from django.core.management.base import BaseCommand
 
+from pricehub.products import timeit
 from products.models import CategoriesModel, ProductModel
 
 
@@ -91,7 +92,10 @@ def download_for_category(category):
         product = ProductModel(title=p['catalogCard']['title'],
                                price=p['catalogCard']['minSellPrice'],
                                category_id=category.id,
-                               anchor_category_id=category.anchor_id)
+                               anchor_category_id=category.anchor_id,
+#                               photo=photo url for this product
+#                               url=https://uzum.uz/ru/product/ + translit() + '-' + id
+                               )
         to_be_saved.append(product)
     ProductModel.objects.bulk_create(to_be_saved)
 
