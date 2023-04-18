@@ -122,7 +122,7 @@
             <form method="POST">
                 {% csrf_token %}
                 <h1>Вход</h1>
-                <input type="email" placeholder="Эл. почта" name="email">
+                <input type="email" placeholder="Эл. почта" name="username">
                 <input type="password" placeholder="Пароль" name="password">
                 <p style="color: red">{{ error }}</p>
                 <button class="submit_btn" type="submit">Вход</button>
