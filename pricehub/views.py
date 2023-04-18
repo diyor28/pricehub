@@ -34,13 +34,6 @@ class HomePage(View):
         ]
         return render(request, 'index.html', context={"categories": categories})
 
-    def html(self,request):
-        code = [{
-            "title": '<div><a href="/">Home</a><a href="/compare">Comparing</a><a href="/categories">Categories</a></div>'}]
-        products = ProductModel
-        return render(request, 'index.html', context={"code": code, "products": products})
-
-
 
 class PriceComparator(View):
     template_name = "comparison.html"
