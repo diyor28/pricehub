@@ -7,6 +7,57 @@ from pricehub.products import timeit
 from products.models import CategoriesModel, ProductModel
 
 
+def translit(text):
+    map = {
+        "а": "a",
+        "б": "b",
+        "в": "v",
+        "г": "g",
+        "д": "d",
+        "е": "ye",
+        "ё": "yo",
+        "ж": "j",
+        "з": "z",
+        "и": "i",
+        "й": "y",
+        "к": "k",
+        "л": "l",
+        "м": "m",
+        "н": "n",
+        "о": "o",
+        "п": "p",
+        "р": "r",
+        "с": "s",
+        "т": "t",
+        "у": "u",
+        "ф": "f",
+        "х": "x",
+        "ц": "ts",
+        "ч": "ch",
+        "щ": "sh",
+        "ъ": "",
+        "ы": "i",
+        "ь": "",
+        "э": "e",
+        "ю": "yu",
+        "я": "ya",
+    }
+    result = ""
+    for i, l in enumerate(text.lower()):
+        t = map.get(l, l)
+        result += t.upper() if text[i].isupper() else t
+    return result
+
+
+def title_to_link(title: str):
+    parts = title.split(" ")
+    if len(parts) > 5:
+        parts = parts[:3]
+    title = "-".join(parts)
+    result = "".join(l for l in title if l.isalpha() or l == "-")
+    return "https://uzum.uz/ru/product/" + translit(result)
+
+
 def variables(categoryId: int, offset: int, limit: int):
     return {
         "queryInput": {
@@ -57,6 +108,20 @@ def _get_products(v):
       rating
       title
       __typename
+      photos {
+        key
+        link(trans: PRODUCT_540) {
+          high
+          low
+          __typename
+        }
+        previewLink: link(trans: PRODUCT_240) {
+          high
+          low
+          __typename
+        }
+        __typename
+      }
     }
     """
     response = requests.post("https://graphql.umarket.uz", json={
@@ -64,10 +129,16 @@ def _get_products(v):
         "variables": v,
     }, headers={
         "Accept-Language": "ru-RU",
+        "Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==",
+        "x-content": "null",
+        "apollographql-client-name": "web-customers",
         "User-Agent": "*",
-        "x-iid": "627f65d5-f0e6-4e50-93b5-331a6d68b00c"
+        "x-iid": "787a2323-62b9-482f-a3b6-c364de775f7a"
     })
-    data = response.json()["data"]["makeSearch"]
+    resp = response.json()
+    if resp.get("errors"):
+        raise ValueError(resp.get("errors"))
+    data = resp["data"]["makeSearch"]
     return data
 
 
@@ -81,7 +152,7 @@ def download_products(categoryId: int):
         products += data["items"]
         if data["total"] < offset + limit:
             break
-    return products
+    return [p["catalogCard"] for p in products]
 
 
 @timeit
@@ -89,13 +160,14 @@ def download_for_category(category):
     products = download_products(int(category.remote_id))
     to_be_saved = []
     for p in products:
-        product = ProductModel(title=p['catalogCard']['title'],
-                               price=p['catalogCard']['minSellPrice'],
-                               category_id=category.id,
-                               anchor_category_id=category.anchor_id,
-#                               photo=photo url for this product
-#                               url=https://uzum.uz/ru/product/ + translit() + '-' + id
-                               )
+        product = ProductModel(
+            title=p['title'],
+            price=p['minSellPrice'],
+            category_id=category.id,
+            anchor_category_id=category.anchor_id,
+            photo=p['photos'][0]['link']['high'],
+            url=title_to_link(p['title']) + f"-{p['id']}"
+        )
         to_be_saved.append(product)
     ProductModel.objects.bulk_create(to_be_saved)
 
