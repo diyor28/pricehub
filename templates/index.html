@@ -111,12 +111,12 @@
         }
 
         .search {
+            position: relative;
             display: flex;
             gap: 10px;
             width: 100%;
             justify-content: center;
             margin: 50px 0;
-
         }
 
         .search input {
@@ -192,7 +192,8 @@
             background: #e5e5e5;
             position: absolute;
             display: none;
-            top: 50px;
+            bottom: -80px;
+            left: 18%;
         }
 
         .dropdown .dropdown-item {
@@ -479,6 +480,7 @@
         <div class="search">
             <a href="/" class="pricehub"><h1>Price Hub</h1></a>
             <input type="text" class="searchTerm" placeholder="What are you looking for?">
+            <div class="dropdown"></div>
             <button type="submit" class="searchButton">
                 <img width="20"
                      src="https://cdn-icons.flaticon.com/svg/3917/3917132.svg?token=exp=1680284458~hmac=c16b4421a3f16184c520b8fcb6aed42a">
@@ -504,24 +506,6 @@
 
         </div>
     </div>
-
-<!--    <div id="slider">-->
-<!--        <figure>-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--            <img src="https://images.uzum.uz/cgjistvhj8j9g69bkqb0/t_product_540_high.jpg#1680898983556">-->
-<!--            <img src="https://images.uzum.uz/cgk7mr7g49devoacckvg/t_product_540_high.jpg#1680898983559">-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--            <img src="https://images.uzum.uz/cgjistvhj8j9g69bkqb0/t_product_540_high.jpg#1680898983556">-->
-<!--            <img src="https://images.uzum.uz/cgk7mr7g49devoacckvg/t_product_540_high.jpg#1680898983559">-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--            <img src="https://images.uzum.uz/cgjistvhj8j9g69bkqb0/t_product_540_high.jpg#1680898983556">-->
-<!--            <img src="https://images.uzum.uz/cgk7mr7g49devoacckvg/t_product_540_high.jpg#1680898983559">-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--        </figure>-->
-
-<!--    </div>-->
 
     <div class="categories">
         <ul class="content-ul">
@@ -558,6 +542,7 @@
                 <div class="price">
                     <h3>price_hub-2023</h3>
                 </div>
+            </div>
         </footer>
 
     </div>
@@ -566,55 +551,9 @@
 {% endblock %}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-
-        (function() {
-        for (var i = 0; i < 3; i++) {
-            Array.from(document.getElementsByClassName("list")).forEach(e => e.append())
-        }
-        document.getElementsByClassName('button')[0].addEventListener('click', () => {
-            document.getElementsByClassName('window')[0].style.right = 0;
-            document.querySelectorAll('.list li')[0].style.border = "4px solid transparent";
-            const x = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
-            document.getElementsByClassName('list')[1].getElementsByTagName('li')[x].style.border = "4px solid #00ba00";
-            document.getElementsByClassName('window')[0].style.right = ((x*130)+(x*8-12)-119)+"px";
-        });
-
-
-    }());
-
-    let arr = [
-        {
-            id: 1,
-            title: "iphone12",
-            price: '120000',
-            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
-            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
-        },
-        {
-            id: 2,
-            title: "iphone12",
-            price: '120000',
-            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
-            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
-        },
-        {
-            id: 3,
-            title: "iphone12",
-            price: '120000',
-            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
-            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
-        },
-        {
-            id: 4,
-            title: "iphone14",
-            price: '120000',
-            photo: "https://images.uzum.uz/cfr01mvhj8j9g6986qr0/original.jpg",
-            url: "https://uzum.uz/ru/product/Chekhol-prozrachnyj-dlya-253351",
-        }
-    ]
     let result = []
 
-    let inp = document.querySelector('.search-inp')
+    let inp = document.querySelector('.searchTerm')
     let cont = document.querySelector('.dropdown')
     inp.onkeyup = () => {
         if (inp.value) {
