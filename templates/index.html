@@ -28,9 +28,6 @@
             justify-content: center;
         }
 
-
-
-
         .categories {
             width:70%;
             padding-top: 50px;
@@ -556,7 +553,7 @@
     let inp = document.querySelector('.searchTerm')
     let cont = document.querySelector('.dropdown')
     inp.onkeyup = () => {
-        if (inp.value) {
+        if (inp.value && inp.value.length >= 3) {
             cont.classList.add('active')
             axios.get(`http://127.0.0.1:8000/api/products/?q=${inp.value}`)
                 .then(res => reload(res.data))
