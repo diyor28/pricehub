@@ -1,10 +1,12 @@
-from threading import Thread
+from concurrent.futures import ThreadPoolExecutor
 
 import requests
 from django.core.management.base import BaseCommand
 
 from pricehub.products import timeit
 from products.models import CategoriesModel, ProductModel
+
+session = requests.Session()
 
 
 def translit(text):
@@ -124,7 +126,7 @@ def _get_products(v):
       }
     }
     """
-    response = requests.post("https://graphql.umarket.uz", json={
+    response = session.post("https://graphql.umarket.uz", json={
         "query": query,
         "variables": v,
     }, headers={
@@ -155,7 +157,6 @@ def download_products(categoryId: int):
     return [p["catalogCard"] for p in products]
 
 
-@timeit
 def download_for_category(category):
     products = download_products(int(category.remote_id))
     to_be_saved = []
@@ -177,15 +178,16 @@ class Command(BaseCommand):
 
     @timeit
     def handle(self, *args, **options):
-        ids = [1251, 1252, 1253, 1254, 1255, 1256, 1257, 1258, 1259, 1260]
+        ids = [1251, 1252, 1253, 1254, 1255, 1256,
+               1257, 1258, 1259, 1260, 1267,
+               1268, 1269, 1270, 1271, 1272, 1273,
+               1274, 1275, 1276, 1277, 1278, 1279]
         uzum_categories = CategoriesModel.objects.filter(id__in=ids)
-        threads = []
-        for uzum_category in uzum_categories:
-            p = Thread(target=download_for_category, args=[uzum_category])
-            threads.append(p)
+        futures = []
+        with ThreadPoolExecutor(10) as executor:
+            for uzum_category in uzum_categories:
+                rs = executor.submit(download_for_category, uzum_category)
+                futures.append(rs)
 
-        for th in threads:
-            th.start()
-
-        for th in threads:
-            th.join()
+        for ft in futures:
+            ft.result()
