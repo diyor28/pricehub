@@ -6,8 +6,6 @@ from django.views.generic import View
 from pricehub.forms import LoginForm
 from products.management.commands.download_categories import get_categories
 from products.models import ProductModel
-from django.contrib.auth import login, authenticate
-from django.contrib import messages
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
