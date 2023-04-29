@@ -23,14 +23,25 @@ class ProductsViewSet(viewsets.ModelViewSet):
         limit = int(query_params.get("limit", "100"))
         offset = int(query_params.get("offset", "0"))
         sort = query_params.get("sort", "id")
+
         price_gt = int(query_params.get("price_gt", "0"))
         price_lt = int(query_params.get("price_lt", "0"))
+        price_gte = int(query_params.get("price_gte", "0"))
+        price_lte = int(query_params.get("price_lte", "0"))
+        source = query_params.get("source", "")
+
+        if source:
+            queryset = queryset.filter(category__source=source)
 
         queryset = queryset.order_by(sort)
 
         queryset = queryset.filter(price__gt=price_gt)
         if price_lt:
             queryset = queryset.filter(price__lt=price_lt)
+
+        queryset = queryset.filter(price__gte=price_gte)
+        if price_lte:
+            queryset = queryset.filter(price__lte=price_lte)
 
         if q:
             queryset = queryset.filter(title__contains=q)
