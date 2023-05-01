@@ -82,6 +82,4 @@ Follow these steps to set up the PriceHub project:
 
 ## Support
 
-- Provide information on how users can seek support, such as links to documentation, issue tracking, or contact details.
-
-Feel free to modify and expand upon these instructions to fit the specific needs of your PriceHub project.
+Help - https://github.com/diyor28
