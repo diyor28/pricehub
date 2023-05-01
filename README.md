@@ -8,7 +8,7 @@ Before getting started, ensure that you have the following prerequisites install
 
 - Python (version 3.10)
 - Django (version 4.2)
-- Other dependencies (list any additional dependencies required)
+- Docker App
 
 ## Installation
 
