@@ -2,7 +2,7 @@
 
 PriceHub is a Python Django project that provides a platform for tracking and comparing prices of various products.
 
-## Prerequisites
+## Requirements
 
 Before getting started, ensure that you have the following prerequisites installed on your system:
 
