@@ -19,7 +19,10 @@ class ProductsViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
 
     def get_queryset(self):
-        queryset = ProductModel.objects.filter(title__contains=self.request.query_params['q'])
+        queryset = ProductModel.objects.all()
+        q = self.request.query_params.get('q', '')
+        if q:
+            queryset = queryset.filter(title__contains='hello')
         return queryset
 
 
