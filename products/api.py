@@ -2,15 +2,23 @@ import random
 
 from rest_framework import routers, serializers, viewsets
 
-from products.models import ProductModel
+from products.models import ProductModel, CategoriesModel
 
 random.seed(322)
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CategoriesModel
+        fields = ['id', 'title', 'source']
+
+
 class ProductSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+
     class Meta:
         model = ProductModel
-        fields = ['id', 'url', 'photo', 'price', 'title']
+        fields = ('id', 'url', 'photo', 'price', 'title', 'category')
 
 
 class ProductsViewSet(viewsets.ModelViewSet):
