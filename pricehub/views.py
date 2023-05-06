@@ -53,12 +53,11 @@ class HomePage(View):
         products = ProductModel.objects.all()
         return render(request, 'index.html', context={"categories": categories, "products": products})
 
-    def html(self,request):
+    def html(self, request):
         code = [{
             "title": '<div><a href="/">Home</a><a href="/compare">Comparing</a><a href="/categories">Categories</a></div>'}]
         products = ProductModel
         return render(request, 'index.html', context={"code": code, "products": products})
-
 
 
 class PriceComparator(View):

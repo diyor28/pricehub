@@ -5,7 +5,7 @@
     <title>Home | PriceHub</title>
 
     <style>
-        * {
+        *{
             padding: 0;
             margin: 0;
             box-sizing: border-box;
@@ -13,428 +13,38 @@
             list-style: none;
             text-decoration: none;
         }
-
-        body {
-            min-height: 100vh;
-            background: #FFFFFF;
-        }
-
-        .content {
-            height: 100%;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-
-
-
-        .categories {
-            width:70%;
-            padding-top: 50px;
-            padding-bottom: 50px;
-        }
-
-        .categories .content-ul {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .categories .content-ul li {
-            width: 23%;
-        }
-
-        .categories .content-ul li a {
-            color: black;
-        }
-
-        .box {
+        .top-box {
             width: 100%;
             padding: 20px;
-            background: #444444;
+            background: #313194;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .box div {
-            display: flex;
-            gap: 15px;
-            color: white;
-        }
 
-        .box div a {
-            color: white;
-        }
 
-        .compare .compare-block .block img {
-            width: 230px;
-        }
 
-        .compare .compare-block .block a {
-            color: black;
-        }
-
-        .box select {
-            color: black;
-            padding: 12px;
-            width: 250px;
-            border: none;
-            font-size: 20px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-            outline: none;
-            border-radius: 10px;
-        }
-
-        .box select::-webkit-scrollbar {
-            width: 10px;
-            background: #c4c4c4;
-            border-radius: 30px;
-        }
-
-        .box select::-webkit-scrollbar-thumb {
-            width: 10px;
-            background: #929292;
-            border-radius: 30px;
-        }
-
-        .box:hover::before {
-            color: rgba(255, 255, 255, 0.6);
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .box select option {
-            padding: 30px;
-        }
-        .icon{
-
-        }
-
-
-
-
-
-        .popular {
-            width: 100%;
-            padding-top: 20px;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .popular_product {
-            width: 24%;
-
-            border-radius: 10px;
-            padding: 15px;
-            padding-bottom: 30px;
-            background: #e5e5e5;
-            cursor: pointer;
-            min-height: 280px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            color: black;
-        }
-
-        .popular_product div {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            font-size: 18px;
-            margin-top: 10px;
-        }
-
-        .popular_product p:nth-child(2) {
-            font-weight: 700;
-        }
-
-        .popular_product img {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        form {
-            position: relative;
-        }
-
-        .popular_product:hover {
-            background: #c5c5c5;
-        }
-
-        .cont {
-            width:70%;
-            padding-bottom: 30px;
-        }
-
-        .dropdown {
-            width: 400px;
-            border-radius: 10px;
-            background: #e5e5e5;
-            position: absolute;
-            display: none;
-        }
-
-        .dropdown .dropdown-item {
-            width: 100%;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        .dropdown .dropdown-item:hover {
-            background: #c4c4c4;
-        }
-
-        .dropdown-title {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .active {
-            display: block;
-        }
-        * {
-      box-sizing: border-box;
-            }
-
-
-            .search {
-              width: 100%;
-
-              display:flex;
-              padding-top:3%;
-            }
-
-            .searchTerm {
-
-              width: 90%;
-
-              border: 1px solid grey;
-              border-right: none;
-
-              padding: 5px;
-              height: 40px;
-              border-radius: 5px 0 0 5px;
-              outline: none;
-              color: #F8F8F8;
-            }
-
-            .searchTerm:focus{
-
-              color: black;
-            }
-
-            .searchButton {
-
-              width: 100px;
-              height: 40px;
-              border: 1px solid grey;
-              background: #F8F8F8;
-              text-align: center;
-              color: #fff;
-              border-radius: 0 5px 5px 0;
-              cursor: pointer;
-              font-size: 30px;
-              margin-right:20px;
-            }
-
-
-            .wrap{
-              width: 70%;
-              padding-left:20px;
-
-              left: 40%;
-
-            }
-            .pricehub{
-            width:40%;
-            font: italic small-caps bold 15px/1 cursive;
-            }
-
-            .link{
-            width:80%;
-            display: inline-flex;
-            gap:5%;
-
-            }
-            .button{
-            width:30%;
-
-
-            padding-left:15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            }
-            .button:hover{
-            background-color:#EFEFEF;
-            border: 1px solid grey;
-            border-radius: 5px 5px 5px 5px;
-            }
-            .loop{
-            transition:0.5s;
-            }
-            .loop:hover{
-            transform:scale(1.02);
-            }
-
-
-            .footer_1{
-            width:100%;
-
-            }
-            .footer-distributed {
-              background-color: #ECDAE1;
-              box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
-              box-sizing: border-box;
-              width: 100%;
-              text-align: left;
-              font: normal 16px sans-serif;
-              padding: 45px 50px;
-            }
-
-            .footer-distributed .footer-left p {
-              color: #8f9296;
-              font-size: 14px;
-              margin: 0;
-            }
-
-
-            .footer-distributed p.footer-links {
-              font-size: 18px;
-              font-weight: bold;
-              color: #ffffff;
-              margin: 0 0 10px;
-              padding: 0;
-              transition: ease .25s;
-            }
-
-            .footer-distributed p.footer-links a {
-              display: inline-block;
-              line-height: 1.8;
-              text-decoration: none;
-              color: inherit;
-              transition: ease .25s;
-            }
-
-
-            .footer-distributed .footer-links a:before {
-              content: "·";
-              font-size: 20px;
-              left: 0;
-              color: #fff;
-              display: inline-block;
-              padding-right: 5px;
-            }
-
-            .footer-distributed .footer-links .link-1:before {
-              content: none;
-            }
-
-            .footer-distributed .footer-right {
-              float: right;
-              margin-top: 6px;
-              max-width: 300px;
-            }
-
-            .footer-distributed .footer-right a {
-              display: inline-block;
-              width: 35px;
-              height: 35px;
-
-              background-color: #33383b;
-              border-radius: 2px;
-              font-size: 20px;
-              color: #ffffff;
-              text-align: center;
-              line-height: 40px;
-              margin-left: 10px;
-              transition:all .25s;
-            }
-
-            .footer-distributed .footer-right a:hover{transform:scale(1.1); -webkit-transform:scale(1.1);}
-
-            .footer-distributed p.footer-links a:hover{text-decoration:underline;}
-
-
-
-
-             .footer-distributed .footer-right {
-                float: none;
-                margin: 0 auto 20px;
-             }
-             .footer-distributed .footer-left p.footer-links {
-                line-height: 1.8;
-             }
-            }
-
-
-
-            padding: 0;
-            margin: 0;
-        }
-        li {
-            list-style: none;
-            display: inline-block;
-            float: left;
-        }
-<!--               #slider{-->
-<!--                overflow:hidden;-->
-<!--                width:50%;-->
-
-<!--               }-->
-<!--               #slider figure{-->
-<!--               position:relative;-->
-<!--               width:100%;-->
-
-<!--               animation:20s slider infinite;-->
-<!--               margin:0;-->
-<!--               left:0;-->
-<!--               }-->
-<!--               #slider figure img {-->
-<!--               width:25%;-->
-<!--               float:left;-->
-<!--               }-->
-<!--               @keyframes slider {-->
-<!--               0%{-->
-<!--               left:0;-->
-<!--               }-->
-<!--               20%{-->
-<!--               left:0;-->
-<!--               }-->
-<!--               25%{-->
-<!--               left:-100%;-->
-<!--               }-->
-<!--               45%{-->
-<!--               left:-100%;-->
-
-<!--               }-->
-<!--               50%{-->
-<!--               left:-200%;-->
-<!--               }-->
-<!--               70%{-->
-<!--               left:-200%;-->
-<!--               }-->
-<!--               75%{-->
-<!--               left:-300%;-->
-<!--               }-->
-<!--               90%{-->
-<!--               left:-300%;-->
-<!--               }-->
-<!--               100%{-->
-<!--               left:-400%;-->
-<!--               }-->
-
-<!--               }-->
-
+        input{
+             width: 900px;
+             height:55px;
+             padding: 12px 20px;
+             margin: 8px 0;
+             display: inline-block;
+             border: 1px solid #ccc;
+             border-radius: 20px;
+             box-sizing: border-box;
+        .but{
+             background-color: #4CAF50;
+             border: none;
+             color: white;
+             padding: 15px 32px;
+             text-align: center;
+             text-decoration: none;
+             display: inline-block;
+             font-size: 16px;
+             margin: 4px 2px;
+             cursor: pointer;
 
 
 
@@ -446,13 +56,19 @@
 
 {% block content %}
 <div class="content">
-    <div class="box">
-        <div>
-            <a href="/">Home</a>
-            <a href="/compare">Comparing</a>
-            <a href="/categories">Categories</a>
+    <div class="top-box">
 
-        </div>
+        <a style="color:white;" href="/" class="h1-price"><h1>Price Hub</h1></a>
+        <a style="color:white;" href="/">Home</a>
+        <a style="color:white;" href="/compare">Comparing</a>
+        <a style="color:white;" href="/categories">Categories</a>
+        <input  placeholder="what are you looking for?">
+        <button class="but">Button</button>
+
+
+
+
+
 
     </div>
 
@@ -460,52 +76,7 @@
 
     <div class="wrap">
 
-        <div class="search">
-            <a href="/" class="pricehub"><h1>Price Hub</h1></a>
-            <input type="text" class="searchTerm" placeholder="What are you looking for?">
-            <button type="submit" class="searchButton">
-                <img width="20"
-                     src="https://cdn-icons.flaticon.com/svg/3917/3917132.svg?token=exp=1680284458~hmac=c16b4421a3f16184c520b8fcb6aed42a">
-
-                <i class="fa fa-search"></i>
-            </button>
-            <div class="link">
-                <a class="button" href="/wishes">
-                    <img width="25px"
-                         src="https://cdn-icons.flaticon.com/svg/3916/3916580.svg?token=exp=1680290852~hmac=ed92c5b6e32be25a8ce8d9664ddfab0e">
-
-                    <i class="hide1">wishes</i>
-                </a>
-                <a class="button" href="/login">
-                    <img width="25px"
-                         src="https://cdn-icons.flaticon.com/svg/3917/3917711.svg?token=exp=1680290852~hmac=b9cedb0883ba166d2f86d4dbfeed908f">
-
-                    <i class="hide2">log-in</i>
-                </a>
-            </div>
-
-
-
-        </div>
     </div>
-
-<!--    <div id="slider">-->
-<!--        <figure>-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--            <img src="https://images.uzum.uz/cgjistvhj8j9g69bkqb0/t_product_540_high.jpg#1680898983556">-->
-<!--            <img src="https://images.uzum.uz/cgk7mr7g49devoacckvg/t_product_540_high.jpg#1680898983559">-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--            <img src="https://images.uzum.uz/cgjistvhj8j9g69bkqb0/t_product_540_high.jpg#1680898983556">-->
-<!--            <img src="https://images.uzum.uz/cgk7mr7g49devoacckvg/t_product_540_high.jpg#1680898983559">-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--            <img src="https://images.uzum.uz/cgjistvhj8j9g69bkqb0/t_product_540_high.jpg#1680898983556">-->
-<!--            <img src="https://images.uzum.uz/cgk7mr7g49devoacckvg/t_product_540_high.jpg#1680898983559">-->
-<!--            <img src="https://images.uzum.uz/cgjdor7hj8j9g69bjs70/t_product_540_high.jpg#1680898983554">-->
-<!--        </figure>-->
-
-<!--    </div>-->
 
     <div class="categories">
         <ul class="content-ul">
@@ -530,21 +101,6 @@
         </div>
     </div>
 
-    <div class="footer_1">
-        <footer class="footer-distributed">
-
-            <div class="footer-right">
-
-                <a href="/"><img  width="25px" src="https://cdn-icons-png.flaticon.com/512/2111/2111710.png"></a>
-                <a href="/"><img width="25px" src="https://cdn-icons-png.flaticon.com/512/1384/1384015.png"></a>
-                <a href="/"><img width="25px" src="https://cdn-icons-png.flaticon.com/512/10110/10110386.png"> </a>
-                <a href="/"><img width="25px" src="https://cdn-icons-png.flaticon.com/512/733/733609.png"></a>
-                <div class="price">
-                    <h3>price_hub-2023</h3>
-                </div>
-        </footer>
-
-    </div>
 
 </div>
 {% endblock %}
