@@ -16,10 +16,6 @@ class ZoodMallSpider(SitemapSpider):
         for request in super().start_requests():
             yield request
 
-    @timeit
-    def _parse_sitemap(self, request):
-        return super()._parse_sitemap(request)
-
     def parse(self, response: HtmlResponse):
         price_str: str = response.xpath("//div[@class='price__un_sale']/text()").get()
         digits = re.findall(r'\d', price_str)
