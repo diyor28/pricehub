@@ -1,6 +1,7 @@
 from scrapy import signals
 from scrapy.crawler import Crawler
 
+from pricehub.products import timeit
 from .spiders.zoodmall import ZoodMallSpider
 
 
@@ -24,6 +25,7 @@ class ZoodmallPipeline:
     def spider_closed(self, spider: ZoodMallSpider):
         self.save_products()
 
+    @timeit
     def save_products(self):
         items, self.items = self.items, []
 

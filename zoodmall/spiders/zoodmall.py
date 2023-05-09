@@ -4,8 +4,6 @@ import re
 from scrapy.http import HtmlResponse
 from scrapy.spiders import SitemapSpider
 
-from pricehub.products import timeit
-
 
 class ZoodMallSpider(SitemapSpider):
     name = "zoodmall"
