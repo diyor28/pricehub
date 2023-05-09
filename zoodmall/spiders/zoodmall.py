@@ -23,4 +23,4 @@ class ZoodMallSpider(SitemapSpider):
         title = response.xpath("//h1/text()").get()
         sku = ld_dict['sku']
         photo_url = response.xpath("//meta[@property='og:image']/@content").get()
-        return dict(price=price, title=title, sku=sku, photo_url=photo_url)
+        return dict(price=price, title=title, sku=sku, photo=photo_url)

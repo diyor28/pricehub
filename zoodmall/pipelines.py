@@ -1,3 +1,5 @@
+import json
+
 from scrapy import signals
 from scrapy.crawler import Crawler
 
@@ -27,11 +29,10 @@ class ZoodmallPipeline:
 
     @timeit
     def save_products(self):
-        items, self.items = self.items, []
+        with open("../data/data.json", "w") as outfile:
+            outfile.write(json.dumps(self.items))
 
-    def process_item(self, item, spider: ZoodMallSpider):
+    def process_item(self, item: dict, spider: ZoodMallSpider):
         self.items.append(item)
         self.pages_crawled += 1
-        if len(self.items) >= 100:
-            self.save_products()
         return item
