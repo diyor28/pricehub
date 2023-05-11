@@ -1,4 +1,5 @@
 import json
+import os
 
 from scrapy import signals
 from scrapy.crawler import Crawler
@@ -29,9 +30,10 @@ class ZoodmallPipeline:
 
     @timeit
     def save_products(self):
+        if not os.path.exists("../data"):
+            os.makedirs("../data")
         with open("../data/data.json", "w") as outfile:
             outfile.write(json.dumps(self.items))
-
 
     def process_item(self, item: dict, spider: ZoodMallSpider):
         self.items.append(item)
