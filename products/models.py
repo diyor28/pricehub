@@ -24,9 +24,9 @@ class CategoriesModel(models.Model):
 
 
 class ProductModel(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=500)
     price = models.FloatField(db_index=True)
-    photo = models.URLField(null=True)
+    photo = models.URLField(null=True, max_length=500)
     url = models.URLField(null=True)
     sku = models.CharField(max_length=255, null=True)
     anchor_category = models.ForeignKey(AnchorCategoriesModel, on_delete=models.SET_NULL, null=True)

@@ -32,6 +32,7 @@ class ZoodmallPipeline:
         with open("../data/data.json", "w") as outfile:
             outfile.write(json.dumps(self.items))
 
+
     def process_item(self, item: dict, spider: ZoodMallSpider):
         self.items.append(item)
         self.pages_crawled += 1

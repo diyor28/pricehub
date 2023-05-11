@@ -15,7 +15,8 @@ class ZoodMallSpider(SitemapSpider):
             yield request
 
     def parse(self, response: HtmlResponse):
-        price_str: str = response.xpath("//div[@class='price__un_sale']/text()").get()
+        price_str: str = response.xpath("//div[@class='price__un_sale price__actual']/text()").get()
+        print(price_str)
         digits = re.findall(r'\d', price_str)
         ld_json = response.xpath("//script[@type='application/ld+json'][contains(text(), 'sku')]/text()").get()
         ld_dict = json.loads(ld_json)

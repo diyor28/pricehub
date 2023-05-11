@@ -59,3 +59,4 @@ def timeit(method: typing.Callable):
         return result
 
     return wrap
+
