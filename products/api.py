@@ -23,10 +23,11 @@ class AddToFavoritesApi(APIView):
 
     def post(self, request):
         product_id = request.POST.get('product_id')
-        print(request.user)
         if not product_id:
             raise ParseError(detail='field product_id is required')
-        return Response({})
+        product = ProductModel.objects.get(pk=product_id)
+        product.users.add(request.user.id)
+        return Response({"ok": True})
 
 
 class ProductSerializer(serializers.ModelSerializer):

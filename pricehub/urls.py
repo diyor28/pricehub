@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from pricehub.views import HomePage, PriceComparator, Login, CategoriesView
+from pricehub.views import HomePage, PriceComparator, Login, CategoriesView, ProfileView
 from products.api import router, AddToFavoritesApi
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/like/', AddToFavoritesApi.as_view()),
     path('categories/', CategoriesView.as_view(), name='categories'),
+    path('profile/', ProfileView.as_view(), name='profile'),
 ]

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Categories</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %}
+    {% for product in favorites %}
+        {{ product.title }}
+    {% endfor %}
+{% endblock %}
+</body>
+</html>

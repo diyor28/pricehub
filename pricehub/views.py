@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
@@ -61,8 +62,7 @@ class Login(View):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                messages.success(request, f'Hi {username.title()}, welcome back!')
-                return redirect('/')
+                return redirect('/profile')
 
             # form is not valid or user is not authenticated
             messages.error(request, f'Invalid username or password')
@@ -73,3 +73,11 @@ class CategoriesView(View):
     def get(self, request):
         categories = get_categories()
         return render(request, 'categories.html', {'categories': categories})
+
+
+class ProfileView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('/login')
+        favorites = request.user.favorite_products.all()
+        return render(request, 'profile.html', {"favorites": favorites})
