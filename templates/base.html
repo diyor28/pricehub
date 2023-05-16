@@ -35,7 +35,7 @@
             font-size: 18px;
         }
 
-        header button {
+        header .button {
             color: white;
             background: #5151CA;
             border-radius: 20px;
@@ -45,6 +45,7 @@
             padding-left: 50px;
             padding-right: 50px;
             cursor: pointer;
+            text-decoration: none;
         }
 
         header input {
@@ -73,12 +74,12 @@
     <h2>PriceHub</h2>
 
     <div class="links">
-        <a href="">Home</a>
-        <a href="">Compare</a>
-        <a href="">Categories</a>
+        <a href="/">Home</a>
+        <a href="/compare/1224/1225">Compare</a>
+        <a href="/categories">Categories</a>
     </div>
     <input type="search" placeholder="What are you looking for ?">
-    <button>LOGIN</button>
+    <a class="button" href="/login">LOGIN</a>
 </header>
 {% block content %}
 {% endblock %}
