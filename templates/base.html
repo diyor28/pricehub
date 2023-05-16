@@ -1,15 +1,94 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static '/styles/base.css' %}">
-    <title>Title</title>
+    <title>title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        header, footer {
+            background: #313194;
+            width: 100%;
+            padding: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        header button {
+            color: white;
+            background: #5151CA;
+            border-radius: 20px;
+            border: none;
+            padding: 10px;
+            font-weight: 600;
+            padding-left: 50px;
+            padding-right: 50px;
+            cursor: pointer;
+        }
+
+        header input {
+            width: 60%;
+            outline: none;
+            font-size: 14px;
+            padding: 10px;
+            border-radius: 14px;
+            border: none;
+        }
+
+        footer .socials img {
+            width: 30px;
+            cursor: pointer;
+        }
+
+        footer .socials {
+            display: flex;
+            gap: 10px;
+        }
+
+    </style>
 </head>
 <body>
-<h1>Header</h1>
+<header>
+    <h2>PriceHub</h2>
+
+    <div class="links">
+        <a href="">Home</a>
+        <a href="">Compare</a>
+        <a href="">Categories</a>
+    </div>
+    <input type="search" placeholder="What are you looking for ?">
+    <button>LOGIN</button>
+</header>
 {% block content %}
 {% endblock %}
-<h1>Footer</h1>
+<footer>
+    <h3>© 2023-2024 PriceHub</h3>
+    <div class="socials">
+        <img src="../static/assetes/telegram%20(1)%201.png" alt="">
+        <img src="../static/assetes/instagram%201.png" alt="">
+        <img src="../static/assetes/youtube%201.png" alt="">
+    </div>
+</footer>
 </body>
 </html>
