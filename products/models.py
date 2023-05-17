@@ -39,3 +39,9 @@ class ProductModel(models.Model):
 
     class Meta:
         db_table = "products"
+
+
+class PriceHistory(models.Model):
+    price = models.FloatField()
+    create_at = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE, related_name='prices')

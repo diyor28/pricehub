@@ -81,3 +81,8 @@ class ProfileView(View):
             return redirect('/login')
         favorites = request.user.favorite_products.all()
         return render(request, 'profile.html', {"favorites": favorites})
+
+class  ProductView(View):
+    def get(self, request):
+        # product =
+        return render(request, 'product.html')

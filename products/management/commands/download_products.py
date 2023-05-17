@@ -143,6 +143,10 @@ def _get_products(v):
     data = resp["data"]["makeSearch"]
     return data
 
+def get_sku(product_id: str):
+    url = f"https://api.uzum.uz/api/v2/product/{product_id}"
+    data = session.get(url).json()['payload']['data']
+    return data['skuList'][0]['id']
 
 def download_products(categoryId: int):
     products = []
@@ -163,6 +167,7 @@ def download_for_category(category):
     for p in products:
         product = ProductModel(
             title=p['title'],
+            sku = get_sku(p['id']),
             price=p['minSellPrice'],
             category_id=category.id,
             anchor_category_id=category.anchor_id,
