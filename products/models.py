@@ -15,6 +15,7 @@ class CategoriesModel(models.Model):
     remote_id = models.CharField(max_length=255)
     source = models.CharField(max_length=255, choices=(('uzum', 'uzum'),
                                                        ('zoodmall', 'zoodmall')))
+    photo = models.URLField(null=True, max_length=500)
     anchor = models.ForeignKey(AnchorCategoriesModel, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
@@ -43,5 +44,5 @@ class ProductModel(models.Model):
 
 class PriceHistory(models.Model):
     price = models.FloatField()
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     product = models.ForeignKey(ProductModel, on_delete=models.CASCADE, related_name='prices')
