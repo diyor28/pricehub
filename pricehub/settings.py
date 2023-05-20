@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'pricehub',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': 5432
     }
 }
