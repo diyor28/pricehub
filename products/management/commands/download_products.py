@@ -54,7 +54,6 @@ def download_for_category(category):
 
 class Command(BaseCommand):
     help = 'Closes the specified poll for voting'
-
     @timeit
     def handle(self, *args, **options):
         ids = [1251, 1252, 1253, 1254, 1255, 1256,

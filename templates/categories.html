@@ -1,12 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Categories</title>
+    <link rel="stylesheet" href="{% static 'css/categories.css' %}">
 </head>
 <body>
-{% extends 'base.html' %}
-{% block content %}
-    <h1>Categories</h1>
+    <div class="categories">
+        {% for category in categories %}
+            <div class="category-box">
+                <p>{{ category.title }}</p>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
 </body>
 </html>
