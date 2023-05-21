@@ -7,7 +7,6 @@ class LoginForm(Form):
 
     def clean_username(self):
         username = self.cleaned_data['username']
-        # hello
         return username.strip()
 
     def clean_password(self):
