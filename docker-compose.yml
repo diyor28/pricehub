@@ -1,14 +1,28 @@
 version: '3.8'
 
 services:
+  nginx:
+    build:
+      context: .
+      target: nginx
+    ports:
+      - "80:80"
+    restart: always
+    volumes:
+      - ~/volumes/media:/www/media
+    depends_on:
+      - back
+
   back:
     build:
       context: .
+      target: django
     restart: always
     ports:
       - "8000:8000"
     volumes:
       - ./:/app
+      - ~/volumes/media:/app/media
     environment:
       - DB_HOST=db
     depends_on:
