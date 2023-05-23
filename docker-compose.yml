@@ -10,6 +10,7 @@ services:
     restart: always
     volumes:
       - ~/volumes/media:/www/media
+      - ./static:/www/static
     depends_on:
       - back
 
