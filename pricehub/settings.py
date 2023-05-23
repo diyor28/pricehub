@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-chp3w*4kpkz^x&n$1)x7n-c4*v_$=fyquw_06c3heg#mhp45t^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['sardor-web.uz', 'www.sardor-web.uz']
+ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
