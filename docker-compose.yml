@@ -11,6 +11,7 @@ services:
     volumes:
       - ~/volumes/media:/www/media
       - ./static:/www/static
+      - /etc/letsencrypt/:/etc/letsencrypt/
     depends_on:
       - back
 
