@@ -11,3 +11,8 @@ CMD gunicorn --bind 0.0.0.0:8000 -w 2 pricehub.wsgi
 FROM nginx:1.21.6 as nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 CMD ["nginx", "-g", "daemon off;"]
+
+FROM certbot/certbot:v1.27.0 as cert-bot
+COPY ssl.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
