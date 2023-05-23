@@ -15,7 +15,6 @@ class CategoriesModel(models.Model):
     remote_id = models.CharField(max_length=255)
     source = models.CharField(max_length=255, choices=(('uzum', 'uzum'),
                                                        ('zoodmall', 'zoodmall')))
-    photo = models.URLField(null=True, max_length=500)
     anchor = models.ForeignKey(AnchorCategoriesModel, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
