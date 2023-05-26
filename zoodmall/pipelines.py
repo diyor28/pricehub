@@ -1,4 +1,5 @@
 import os
+import json
 
 from scrapy import signals
 from scrapy.crawler import Crawler
@@ -25,20 +26,16 @@ class ZoodmallPipeline:
         if not os.path.exists("data"):
             os.makedirs("data")
 
-        if os.path.exists("data/data.txt"):
-            os.remove("data/data.txt")
+        if os.path.exists("data/data.json"):
+            os.remove("data/data.json")
 
     def spider_closed(self, spider: ZoodMallSpider):
         self.save_products()
 
     @timeit
     def save_products(self):
-        rows = []
-        for item in self.items:
-            rows.append(f"{item['title']}|{item['sku']}|{item['photo']}|{item['price']}\n")
-
-        with open("data/data.txt", "a") as outfile:
-            outfile.writelines(rows)
+        with open("data/data.json", "a") as outfile:
+            json.dump(self.items, outfile)
 
         self.items = []
 

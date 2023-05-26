@@ -32,7 +32,6 @@ def download_product_photos():
             future = executor.submit(download_image, image_url, save_path, filename)
             futures.append(future)
 
-        # Wait for all tasks to complete
         for future in futures:
             future.result()
 
