@@ -3,8 +3,15 @@ import os
 import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
-from concurrent.futures import ThreadPoolExecutor
 import time
+
+
+def preprocess_image(image_path):
+    image = tf.io.read_file(image_path)
+    image = tf.image.decode_jpeg(image, channels=3)
+    image = tf.image.resize(image, [256, 256])
+    image = tf.cast(image, tf.float32) / 255.0
+    return image
 
 
 class Command(BaseCommand):
@@ -40,31 +47,24 @@ class Command(BaseCommand):
         ])
         vectorizer.build([None, 256, 256, 3])
 
-        def preprocess_image(image_path):
-            image = tf.io.read_file(image_path)
-            image = tf.image.decode_jpeg(image, channels=3)
-            image = tf.image.resize(image, [256, 256])
-            image = tf.cast(image, tf.float32) / 255.0
-            return image
+        image_files = os.listdir(photo_folder_path)[:num_photos]
+        image_paths = [os.path.join(photo_folder_path, filename) for filename in image_files]
+        ids = [os.path.splitext(filename)[0].replace("product_", "") for filename in image_files]
 
-        def vectorize_image(image_path):
-            image = preprocess_image(image_path)
-            feature = vectorizer.predict(tf.expand_dims(image, axis=0))[0]
-            return feature
+        dataset = tf.data.Dataset.from_tensor_slices(image_paths)
 
-        image_paths = [os.path.join(photo_folder_path, filename) for filename in
-                       os.listdir(photo_folder_path)[:num_photos]]
-        ids = [os.path.splitext(filename)[0].replace("product_", "") for filename in
-               os.listdir(photo_folder_path)[:num_photos]]
+        dataset = dataset.map(preprocess_image, num_parallel_calls=tf.data.AUTOTUNE)
+        dataset = dataset.batch(16)
 
-        features = []
-        with ThreadPoolExecutor() as executor:
-            for result in executor.map(vectorize_image, image_paths):
-                features.append(result)
+        # Vectorize images
+        vectors = []
+        for batch in dataset:
+            batch_vectors = vectorizer.predict(batch)
+            vectors.extend(batch_vectors)
 
-        features = np.array(features)
+        vectors = np.array(vectors)
         ids = np.array(ids)
-        return features, ids
+        return vectors, ids
 
     def save_features(self, vectors, ids, output_file):
         np.savez(output_file, vectors=vectors, ids=ids)
