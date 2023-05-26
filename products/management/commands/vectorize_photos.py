@@ -56,7 +56,6 @@ class Command(BaseCommand):
         dataset = dataset.map(preprocess_image, num_parallel_calls=tf.data.AUTOTUNE)
         dataset = dataset.batch(16)
 
-        # Vectorize images
         vectors = []
         for batch in dataset:
             batch_vectors = vectorizer.predict(batch)
