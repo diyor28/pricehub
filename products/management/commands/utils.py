@@ -81,7 +81,7 @@ def variables(categoryId: int, offset: int, limit: int):
     }
 
 
-def _get_products(v):
+async def _get_products(client: httpx.AsyncClient, v):
     query = """
     query getMakeSearch($queryInput: MakeSearchQueryInput!) {
       makeSearch(query: $queryInput) {
@@ -132,7 +132,7 @@ def _get_products(v):
       }
     }
     """
-    response = session.post("https://graphql.umarket.uz", json={
+    response = await client.post("https://graphql.umarket.uz", json={
         "query": query,
         "variables": v,
     }, headers=GLOBAL_HEADERS)
@@ -143,20 +143,25 @@ def _get_products(v):
     return data
 
 
-def download_products(categoryId: int):
+async def download_products(categoryId: int):
     products = []
     limit = 100
-    for offset in range(0, 100_000, limit):
-        data = _get_products(variables(categoryId, offset, limit))
-        if not data["items"]:
-            return
-        products += data["items"]
-        if data["total"] < offset + limit:
-            break
-    return [p["catalogCard"] for p in products]
+    limits = httpx.Limits(max_keepalive_connections=10, max_connections=50)
+    async with httpx.AsyncClient(http2=True, limits=limits, timeout=20) as client:
+        for offset in range(0, 100_000, limit):
+            data = await _get_products(client, variables(categoryId, offset, limit))
+            if not data["items"]:
+                return
+            products += [p["catalogCard"] for p in data["items"]]
+            if data["total"] < offset + limit:
+                break
+        skus = await asyncio.gather(*[get_sku(client, p["id"]) for p in products])
+        for p, sku in zip(products, skus):
+            p["sku"] = sku
+    return products
 
 
-async def _get_sku(client: httpx.AsyncClient, product_id: str):
+async def get_sku(client: httpx.AsyncClient, product_id: str):
     url = f"https://api.uzum.uz/api/v2/product/{product_id}"
     resp = await client.get(url, headers=GLOBAL_HEADERS)
     data = resp.json()
@@ -165,14 +170,3 @@ async def _get_sku(client: httpx.AsyncClient, product_id: str):
     if not data["payload"]["data"]["skuList"]:
         return None
     return data["payload"]["data"]["skuList"][0]["id"]
-
-
-async def _get_sku_list(ids: list[str]) -> list[str]:
-    async with httpx.AsyncClient(http2=True) as client:
-        skus = await asyncio.gather(*[_get_sku(client, _id) for _id in ids])
-    return skus
-
-
-def get_sku_list(ids: list[str]) -> list[str]:
-    loop = asyncio.new_event_loop()
-    return loop.run_until_complete(_get_sku_list(ids))

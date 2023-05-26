@@ -1,7 +1,7 @@
 import os
 import urllib.request
 import logging
-from PIL import Image
+import time
 from concurrent.futures import ThreadPoolExecutor
 from django.core.management.base import BaseCommand
 from products.models import ProductModel
@@ -12,7 +12,11 @@ class Command(BaseCommand):
     help = 'Download and save product images from ProductModel'
 
     def handle(self, *args, **options):
+        start_time = time.time()
         download_product_photos()
+        end_time = time.time()
+        execution_time = end_time - start_time
+        logging.info(f'Total execution time: {execution_time} seconds')
 
 def download_product_photos():
     products = ProductModel.objects.exclude(photo__isnull=True)
