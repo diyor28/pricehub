@@ -134,3 +134,4 @@ MEDIA_ROOT = 'media/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+TELEGRAM_TOKEN = '5802533616:AAEDr01SZ2UpkrmH4a_yJEkVmZeDmFKJ3ug'
