@@ -39,10 +39,15 @@
             cursor: pointer;
             border: none;
         }
+        button a {
+            text-decoration: none;
+            color: white;
+        }
     </style>
 </head>
 <body>
 {% extends 'base.html' %}
+{% load socialaccount %}
 {% block content %}
     <div class="main">
         <form method="POST">
@@ -52,6 +57,12 @@
             <input type="password" placeholder="password" name="password">
             <p style="color: red">{{ error }}</p>
             <button class="submit_btn" type="submit">Вход</button>
+            <button class="btn btn-outline-info">
+                <a href="{% provider_login_url 'google'%}?next=/">
+                    <i class="fab fa-google"></i>
+                    Login with Google
+                </a>
+            </button>
         </form>
     </div>
 {% endblock %}

@@ -14,4 +14,5 @@ urlpatterns = [
     path('categories/', CategoriesView.as_view(), name='categories'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('product/', ProductView.as_view()),
+    path("", include("allauth.urls")), #most important
 ]
