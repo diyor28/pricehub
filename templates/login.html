@@ -57,9 +57,8 @@
             <input type="password" placeholder="password" name="password">
             <p style="color: red">{{ error }}</p>
             <button class="submit_btn" type="submit">Вход</button>
-            <button class="btn btn-outline-info">
+            <button class="btn">
                 <a href="{% provider_login_url 'google'%}?next=/">
-                    <i class="fab fa-google"></i>
                     Login with Google
                 </a>
             </button>
