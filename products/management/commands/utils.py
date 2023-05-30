@@ -9,7 +9,7 @@ GLOBAL_HEADERS = {
     "x-content": "null",
     "apollographql-client-name": "web-customers",
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
-    "x-iid": "971e7b2f-ea0d-4007-b9ec-7ad338563527"
+    "x-iid": "787a2323-62b9-482f-a3b6-c364de775f7a"
 }
 
 session = requests.Session()

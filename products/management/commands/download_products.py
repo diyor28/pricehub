@@ -1,4 +1,5 @@
 import asyncio
+import typing
 
 import httpx
 import tqdm
@@ -7,7 +8,7 @@ from django.core.management.base import BaseCommand
 
 from pricehub.products import timeit
 from products.management.commands.utils import title_to_link, query, GLOBAL_HEADERS, variables
-from products.models import CategoriesModel, ProductModel, PriceHistory
+from products.models import CategoriesModel, ProductModel
 
 
 class UzumClient:
@@ -16,7 +17,6 @@ class UzumClient:
         limits = httpx.Limits(max_keepalive_connections=20, max_connections=100)
         self.client = httpx.AsyncClient(http2=True, limits=limits)
 
-    @timeit
     async def _get_page(self, v):
         response = await self.client.post("https://graphql.umarket.uz", json={
             "query": query,
@@ -48,6 +48,20 @@ class UzumClient:
         return self.client.aclose()
 
 
+class AsyncPool:
+    def __init__(self, workers: int):
+        self.workers = workers
+        self._executing: list[asyncio.Task] = []
+
+    async def map(self, f: typing.Callable, iterable: typing.Iterable):
+        for el in iterable:
+            if len(self._executing) >= self.workers:
+                _, pending = await asyncio.wait(self._executing, return_when=asyncio.FIRST_COMPLETED)
+                self._executing = list(pending)
+            self._executing.append(asyncio.create_task(f(el)))
+        await asyncio.wait(self._executing, return_when=asyncio.ALL_COMPLETED)
+
+
 class ProductsDownloader:
     client: UzumClient
 
@@ -57,53 +71,39 @@ class ProductsDownloader:
         self.pbar = tqdm.tqdm(total=len(categories))
         self.client = UzumClient()
 
-    async def process_category(self, category: CategoriesModel):
-        products = await self.client.download_products(int(category.remote_id))
+    async def _save_products(self, category: CategoriesModel, products: list[dict]):
         to_be_created = []
-        to_be_updated = []
-        to_be_created_ph = []
-
-        seen = set()
-        products = [seen.add(p["productId"]) or p for p in products if p["productId"] not in seen]
-
+        existing: list[ProductModel] = await sync_to_async(list)(ProductModel.objects.filter(uzum_remote_id__in=[p["productId"] for p in products]).all())
+        existing_ids = [ex.uzum_remote_id for ex in existing]
         for p in products:
+            product_id = str(p['productId'])
             price = p["minSellPrice"]
             title = p["title"]
             photo = p["photos"][0]["link"]["high"]
-            url = title_to_link(p["title"]) + f"-{p['productId']}"
-            try:
-                existing = await sync_to_async(ProductModel.objects.get)(uzum_remote_id=str(p["productId"]))
-                existing.title = title
-                existing.price = price
-                existing.photo = photo
-                existing.url = url
-                to_be_created_ph.append(PriceHistory(price=price, product_id=existing.pk))
-                to_be_updated.append(existing)
-            except ProductModel.DoesNotExist:
-                product = ProductModel(
-                    title=title,
-                    price=price,
-                    uzum_remote_id=str(p["productId"]),
-                    category_id=category.id,
-                    anchor_category_id=category.anchor_id,
-                    photo=photo,
-                    url=url
-                )
-                to_be_created.append(product)
+            url = title_to_link(p["title"]) + f"-{product_id}"
+            if product_id in existing_ids:
+                continue
+            to_be_created.append(ProductModel(
+                title=title,
+                price=price,
+                uzum_remote_id=product_id,
+                category_id=category.id,
+                anchor_category_id=category.anchor_id,
+                photo=photo,
+                url=url
+            ))
+        await sync_to_async(ProductModel.objects.bulk_create)(to_be_created)
 
-        await asyncio.gather(
-            sync_to_async(PriceHistory.objects.bulk_create)(to_be_created_ph),
-            sync_to_async(ProductModel.objects.bulk_create)(to_be_created),
-            sync_to_async(ProductModel.objects.bulk_update)(to_be_updated, fields=['title', 'price', 'photo', 'url'])
-        )
+    async def process_category(self, category: CategoriesModel):
+        products = await self.client.download_products(int(category.remote_id))
+        seen = set()
+        products = [seen.add(p["productId"]) or p for p in products if p["productId"] not in seen]
+        await self._save_products(category, products)
         self.pbar.update(1)
 
-    async def _download_multiple(self, categories):
-        await asyncio.gather(*[self.process_category(cat) for cat in categories])
-
     async def _async_download(self):
-        for i in range(0, len(self.categories), self.concurrent):
-            await self._download_multiple(self.categories[i:i + 5])
+        pool = AsyncPool(self.concurrent)
+        await pool.map(self.process_category, self.categories)
         await self.client.aclose()
         self.pbar.close()
 
