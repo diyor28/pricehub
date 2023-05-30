@@ -7,7 +7,7 @@ from asgiref.sync import sync_to_async
 from django.core.management.base import BaseCommand
 
 from pricehub.products import timeit
-from products.management.commands.utils import title_to_link, query, GLOBAL_HEADERS, variables
+from products.management.commands.utils import title_to_link, query, get_headers, variables
 from products.models import CategoriesModel, ProductModel
 
 
@@ -21,7 +21,7 @@ class UzumClient:
         response = await self.client.post("https://graphql.umarket.uz", json={
             "query": query,
             "variables": v,
-        }, headers=GLOBAL_HEADERS)
+        }, headers=get_headers())
         resp = response.json()
         if resp.get("errors"):
             raise ValueError(resp.get("errors"))
@@ -38,7 +38,7 @@ class UzumClient:
                 print(e)
                 break
             if not data["items"]:
-                return
+                return []
             products += [p["catalogCard"] for p in data["items"]]
             if data["total"] < offset + limit:
                 break
@@ -71,7 +71,8 @@ class ProductsDownloader:
         self.pbar = tqdm.tqdm(total=len(categories))
         self.client = UzumClient()
 
-    async def _save_products(self, category: CategoriesModel, products: list[dict]):
+    @staticmethod
+    async def _save_products(category: CategoriesModel, products: list[dict]):
         to_be_created = []
         existing: list[ProductModel] = await sync_to_async(list)(ProductModel.objects.filter(uzum_remote_id__in=[p["productId"] for p in products]).all())
         existing_ids = [ex.uzum_remote_id for ex in existing]
@@ -122,6 +123,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         limit = options["categories"]
         concurrent = options["concurrent"]
-        uzum_categories = list(CategoriesModel.objects.all()[:limit])
+        uzum_categories = list(CategoriesModel.objects.order_by('id').all()[:limit])
         downloader = ProductsDownloader(uzum_categories, concurrent)
         downloader.download()

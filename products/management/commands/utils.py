@@ -1,16 +1,45 @@
-import asyncio
+import random
 
-import httpx
 import requests
 
-GLOBAL_HEADERS = {
-    "Accept-Language": "ru-RU",
-    "Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==",
-    "x-content": "null",
-    "apollographql-client-name": "web-customers",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
-    "x-iid": "787a2323-62b9-482f-a3b6-c364de775f7a"
-}
+GLOBAL_HEADERS = [
+    {
+        "Accept-Language": "ru-RU",
+        "Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==",
+        "x-content": "null",
+        "apollographql-client-name": "web-customers",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+        "x-iid": "787a2323-62b9-482f-a3b6-c364de775f7a"
+    },
+    {
+        "Accept-Language": "ru-RU",
+        "Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==",
+        "x-content": "null",
+        "apollographql-client-name": "web-customers",
+        "User-Agent": "*",
+        "x-iid": "6cacf43c-9415-4170-bbde-97e352be8f44"
+    },
+    {
+        "Accept-Language": "ru-RU",
+        "Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==",
+        "x-content": "null",
+        "apollographql-client-name": "web-customers",
+        "User-Agent": "*",
+        "x-iid": "8d6a1f0b-ab8d-4611-b29d-971b15d75795"
+    },
+    {
+        "Accept-Language": "ru-RU",
+        "Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==",
+        "x-content": "null",
+        "apollographql-client-name": "web-customers",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+        "x-iid": "8098cb7e-9c45-4732-9252-1b63fcfbabfe"
+    }
+]
+
+
+def get_headers():
+    return random.choice(GLOBAL_HEADERS)
 
 session = requests.Session()
 
