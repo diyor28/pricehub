@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = 'Download product photos'
-    client = httpx.AsyncClient(http2=True)
+    client = httpx.AsyncClient(http2=False, limits=httpx.Limits(max_connections=20, max_keepalive_connections=10))
     pbar: typing.Optional[tqdm.tqdm] = None
 
     async def download_product_photos(self, products: list[ProductModel], concurrent: int):
