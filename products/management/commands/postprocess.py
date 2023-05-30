@@ -38,8 +38,10 @@ class Command(BaseCommand):
                 small=ph["photo"]["240"]["high"],
                 product_id=product.pk
             ))
-        await sync_to_async(ProductPhotoModel.objects.bulk_create)(photos)
-        await sync_to_async(product.save)()
+        await asyncio.gather(
+            sync_to_async(ProductPhotoModel.objects.bulk_create)(photos),
+            sync_to_async(product.save)()
+        )
         self.pbar.update(1)
 
     async def _download_skus(self, products: list[ProductModel]):
