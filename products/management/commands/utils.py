@@ -12,7 +12,7 @@ GLOBAL_HEADERS = {
 
 def get_headers():
     h = GLOBAL_HEADERS.copy()
-    h["x-iid"] = h["x-iid"].replace("6", str(random.randint(0, 9)))
+    h["x-iid"] = h["x-iid"].replace(str(random.randint(0, 9)), str(random.randint(0, 9)))
     return h
 
 
