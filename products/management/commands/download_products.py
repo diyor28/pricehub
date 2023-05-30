@@ -16,6 +16,7 @@ class UzumClient:
         limits = httpx.Limits(max_keepalive_connections=20, max_connections=100)
         self.client = httpx.AsyncClient(http2=True, limits=limits)
 
+    @timeit
     async def _get_page(self, v):
         response = await self.client.post("https://graphql.umarket.uz", json={
             "query": query,

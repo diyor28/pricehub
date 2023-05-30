@@ -84,31 +84,19 @@ def variables(categoryId: int, offset: int, limit: int):
 query = """
 query getMakeSearch($queryInput: MakeSearchQueryInput!) {
   makeSearch(query: $queryInput) {
-    id
-    queryId
-    queryText
     items {
       catalogCard {
-        ...SkuGroupCardFragment
+        minSellPrice
+        productId
+        title
+        photos {
+          link(trans: PRODUCT_540) {
+            high
+          }
+        }
       }
     }
     total
-  }
-}
-
-fragment SkuGroupCardFragment on SkuGroupCard {
-  ...DefaultCardFragment
-  __typename
-}
-
-fragment DefaultCardFragment on CatalogCard {
-  minSellPrice
-  productId
-  title
-  photos {
-    link(trans: PRODUCT_540) {
-      high
-    }
   }
 }
 """
