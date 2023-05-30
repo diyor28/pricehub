@@ -116,7 +116,7 @@ class Command(BaseCommand):
     help = 'Download products'
 
     def add_arguments(self, parser):
-        parser.add_argument('--categories', type=int, default=10)
+        parser.add_argument('--categories', type=int, default=500)
         parser.add_argument('--concurrent', type=int, default=4)
 
     @timeit
