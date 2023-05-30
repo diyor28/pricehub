@@ -8,8 +8,8 @@ GLOBAL_HEADERS = {
     "Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==",
     "x-content": "null",
     "apollographql-client-name": "web-customers",
-    "User-Agent": "*",
-    "x-iid": "787a2323-62b9-482f-a3b6-c364de775f7a"
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+    "x-iid": "971e7b2f-ea0d-4007-b9ec-7ad338563527"
 }
 
 session = requests.Session()
@@ -81,92 +81,53 @@ def variables(categoryId: int, offset: int, limit: int):
     }
 
 
-async def _get_products(client: httpx.AsyncClient, v):
-    query = """
-    query getMakeSearch($queryInput: MakeSearchQueryInput!) {
-      makeSearch(query: $queryInput) {
-        id
-        queryId
-        queryText
-        items {
-          catalogCard {
-            __typename
-            ...SkuGroupCardFragment
-          }
-          __typename
-        }
-        total
-        mayHaveAdultContent
+query = """
+query getMakeSearch($queryInput: MakeSearchQueryInput!) {
+  makeSearch(query: $queryInput) {
+    id
+    queryId
+    queryText
+    items {
+      catalogCard {
         __typename
+        ...SkuGroupCardFragment
       }
-    }
-
-    fragment SkuGroupCardFragment on SkuGroupCard {
-      ...DefaultCardFragment
       __typename
     }
+    total
+    mayHaveAdultContent
+    __typename
+  }
+}
 
-    fragment DefaultCardFragment on CatalogCard {
-      feedbackQuantity
-      id
-      minFullPrice
-      minSellPrice
-      ordersQuantity
-      productId
-      rating
-      title
+fragment SkuGroupCardFragment on SkuGroupCard {
+  ...DefaultCardFragment
+  __typename
+}
+
+fragment DefaultCardFragment on CatalogCard {
+  feedbackQuantity
+  id
+  minFullPrice
+  minSellPrice
+  ordersQuantity
+  productId
+  rating
+  title
+  __typename
+  photos {
+    key
+    link(trans: PRODUCT_540) {
+      high
+      low
       __typename
-      photos {
-        key
-        link(trans: PRODUCT_540) {
-          high
-          low
-          __typename
-        }
-        previewLink: link(trans: PRODUCT_240) {
-          high
-          low
-          __typename
-        }
-        __typename
-      }
     }
-    """
-    response = await client.post("https://graphql.umarket.uz", json={
-        "query": query,
-        "variables": v,
-    }, headers=GLOBAL_HEADERS)
-    resp = response.json()
-    if resp.get("errors"):
-        raise ValueError(resp.get("errors"))
-    data = resp["data"]["makeSearch"]
-    return data
-
-
-async def download_products(categoryId: int):
-    products = []
-    limit = 100
-    limits = httpx.Limits(max_keepalive_connections=10, max_connections=50)
-    async with httpx.AsyncClient(http2=True, limits=limits, timeout=20) as client:
-        for offset in range(0, 100_000, limit):
-            data = await _get_products(client, variables(categoryId, offset, limit))
-            if not data["items"]:
-                return
-            products += [p["catalogCard"] for p in data["items"]]
-            if data["total"] < offset + limit:
-                break
-        skus = await asyncio.gather(*[get_sku(client, p["id"]) for p in products])
-        for p, sku in zip(products, skus):
-            p["sku"] = sku
-    return products
-
-
-async def get_sku(client: httpx.AsyncClient, product_id: str):
-    url = f"https://api.uzum.uz/api/v2/product/{product_id}"
-    resp = await client.get(url, headers=GLOBAL_HEADERS)
-    data = resp.json()
-    if resp.status_code not in [200, 201] or not data["payload"]:
-        return None
-    if not data["payload"]["data"]["skuList"]:
-        return None
-    return data["payload"]["data"]["skuList"][0]["id"]
+    previewLink: link(trans: PRODUCT_240) {
+      high
+      low
+      __typename
+    }
+    __typename
+  }
+}
+"""
