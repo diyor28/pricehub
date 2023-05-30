@@ -15,7 +15,6 @@ class CategoriesModel(models.Model):
     remote_id = models.CharField(max_length=255)
     source = models.CharField(max_length=255, choices=(('uzum', 'uzum'),
                                                        ('zoodmall', 'zoodmall')))
-    photo = models.URLField(null=True, max_length=500)
     anchor = models.ForeignKey(AnchorCategoriesModel, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
@@ -30,6 +29,7 @@ class ProductModel(models.Model):
     price = models.FloatField(db_index=True)
     photo = models.URLField(null=True, max_length=500)
     url = models.URLField(null=True)
+    uzum_remote_id = models.CharField(max_length=255, null=True)
     sku = models.CharField(max_length=255, null=True)
     anchor_category = models.ForeignKey(AnchorCategoriesModel, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(CategoriesModel, on_delete=models.SET_NULL, null=True)

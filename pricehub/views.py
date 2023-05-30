@@ -84,5 +84,4 @@ class ProfileView(View):
 
 class  ProductView(View):
     def get(self, request):
-        # product =
         return render(request, 'product.html')

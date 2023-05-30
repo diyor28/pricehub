@@ -7,6 +7,7 @@
             padding: 20px;
             width: 30%;
             height: 79.1vh;
+            margin: 10px 30px 10px 30px;
         }
 
         input {
@@ -30,9 +31,9 @@
             gap: 10px;
         }
 
-        button {
-            background: #313194;
+        .save {
             color: white;
+            background: black;
             font-size: 18px;
             border-radius: 10px;
             padding: 10px;
@@ -76,23 +77,20 @@
 <body>
 {% extends 'base.html' %}
 {% block content %}
-    {#    {% for product in favorites %}#}
-    {#        {{ product.title }}#}
-    {#    {% endfor %}#}
     <div class="main">
         <div class="profile-header">
             <h1>Profile</h1>
-            <p>update your profile details below</p>
+            <p>Update your profile details below</p>
         </div>
         <div class="form">
-            <span>profile picture</span>
             <div class="avatar"></div>
+            <span>Profile picture</span>
             <form action="">
                 <input type="text" placeholder="First Name">
                 <input type="text" placeholder="Last Name">
                 <input type="email" placeholder="Email">
                 <input type="text" placeholder="Username">
-                <button>Save</button>
+                <button class="save">Save</button>
             </form>
         </div>
     </div>
