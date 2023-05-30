@@ -89,14 +89,10 @@ query getMakeSearch($queryInput: MakeSearchQueryInput!) {
     queryText
     items {
       catalogCard {
-        __typename
         ...SkuGroupCardFragment
       }
-      __typename
     }
     total
-    mayHaveAdultContent
-    __typename
   }
 }
 
@@ -106,28 +102,13 @@ fragment SkuGroupCardFragment on SkuGroupCard {
 }
 
 fragment DefaultCardFragment on CatalogCard {
-  feedbackQuantity
-  id
-  minFullPrice
   minSellPrice
-  ordersQuantity
   productId
-  rating
   title
-  __typename
   photos {
-    key
     link(trans: PRODUCT_540) {
       high
-      low
-      __typename
     }
-    previewLink: link(trans: PRODUCT_240) {
-      high
-      low
-      __typename
-    }
-    __typename
   }
 }
 """

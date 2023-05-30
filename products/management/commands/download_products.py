@@ -33,29 +33,15 @@ class UzumClient:
         for offset in range(0, 100_000, limit):
             try:
                 data = await self._get_page(variables(categoryId, offset, limit))
-            except ValueError:
+            except ValueError as e:
+                print(e)
                 break
             if not data["items"]:
                 return
             products += [p["catalogCard"] for p in data["items"]]
             if data["total"] < offset + limit:
                 break
-        skus = await asyncio.gather(*[self.get_sku(p["id"]) for p in products])
-        for p, sku in zip(products, skus):
-            p["sku"] = sku
         return products
-
-    async def get_sku(self, product_id: str):
-        url = f"https://api.uzum.uz/api/v2/product/{product_id}"
-        resp = await self.client.get(url, headers=GLOBAL_HEADERS)
-        if resp.status_code not in [200, 201]:
-            return
-        data = resp.json()
-        if not data["payload"]:
-            return
-        if not data["payload"]["data"]["skuList"]:
-            return
-        return data["payload"]["data"]["skuList"][0]["id"]
 
     def aclose(self):
         return self.client.aclose()
@@ -72,32 +58,31 @@ class ProductsDownloader:
 
     async def process_category(self, category: CategoriesModel):
         products = await self.client.download_products(int(category.remote_id))
-
         to_be_created = []
         to_be_updated = []
         to_be_created_ph = []
+
+        seen = set()
+        products = [seen.add(p["productId"]) or p for p in products if p["productId"] not in seen]
 
         for p in products:
             price = p["minSellPrice"]
             title = p["title"]
             photo = p["photos"][0]["link"]["high"]
-            sku = p["sku"]
-            url = title_to_link(p["title"]) + f"-{p['id']}"
+            url = title_to_link(p["title"]) + f"-{p['productId']}"
             try:
-                if not sku:
-                    raise ProductModel.DoesNotExist("Bullshit")
-                existing_product = await sync_to_async(ProductModel.objects.get)(sku=sku)
-                existing_product.title = title
-                existing_product.price = price
-                existing_product.photo = photo
-                existing_product.url = url
-                to_be_created_ph.append(PriceHistory(price=price, product_id=existing_product.pk))
-                to_be_updated.append(existing_product)
+                existing = await sync_to_async(ProductModel.objects.get)(uzum_remote_id=str(p["productId"]))
+                existing.title = title
+                existing.price = price
+                existing.photo = photo
+                existing.url = url
+                to_be_created_ph.append(PriceHistory(price=price, product_id=existing.pk))
+                to_be_updated.append(existing)
             except ProductModel.DoesNotExist:
                 product = ProductModel(
                     title=title,
-                    sku=sku,
                     price=price,
+                    uzum_remote_id=str(p["productId"]),
                     category_id=category.id,
                     anchor_category_id=category.anchor_id,
                     photo=photo,
@@ -129,8 +114,8 @@ class Command(BaseCommand):
     help = 'Download products'
 
     def add_arguments(self, parser):
-        parser.add_argument('--categories', type=int, default=100)
-        parser.add_argument('--concurrent', type=int, default=5)
+        parser.add_argument('--categories', type=int, default=10)
+        parser.add_argument('--concurrent', type=int, default=4)
 
     @timeit
     def handle(self, *args, **options):
