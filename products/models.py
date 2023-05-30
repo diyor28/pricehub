@@ -42,6 +42,16 @@ class ProductModel(models.Model):
         db_table = "products"
 
 
+class ProductPhotoModel(models.Model):
+    original = models.URLField()
+    large = models.URLField()
+    small = models.URLField()
+    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "product_photos"
+
+
 class PriceHistory(models.Model):
     price = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
