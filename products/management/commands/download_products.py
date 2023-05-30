@@ -13,7 +13,7 @@ from products.models import CategoriesModel, ProductModel, PriceHistory
 class UzumClient:
 
     def __init__(self):
-        limits = httpx.Limits(max_keepalive_connections=10, max_connections=50)
+        limits = httpx.Limits(max_keepalive_connections=20, max_connections=100)
         self.client = httpx.AsyncClient(http2=True, limits=limits)
 
     async def _get_page(self, v):
@@ -64,9 +64,10 @@ class UzumClient:
 class ProductsDownloader:
     client: UzumClient
 
-    def __init__(self, categories: list[CategoriesModel]):
-        self.pbar = tqdm.tqdm(total=len(categories))
+    def __init__(self, categories: list[CategoriesModel], concurrent: int):
         self.categories = categories
+        self.concurrent = concurrent
+        self.pbar = tqdm.tqdm(total=len(categories))
         self.client = UzumClient()
 
     async def process_category(self, category: CategoriesModel):
@@ -115,7 +116,7 @@ class ProductsDownloader:
         await asyncio.gather(*[self.process_category(cat) for cat in categories])
 
     async def _async_download(self):
-        for i in range(0, len(self.categories), 5):
+        for i in range(0, len(self.categories), self.concurrent):
             await self._download_multiple(self.categories[i:i + 5])
         await self.client.aclose()
         self.pbar.close()
@@ -125,10 +126,16 @@ class ProductsDownloader:
 
 
 class Command(BaseCommand):
-    help = 'Closes the specified poll for voting'
+    help = 'Download products'
+
+    def add_arguments(self, parser):
+        parser.add_argument('--categories', type=int, default=100)
+        parser.add_argument('--concurrent', type=int, default=5)
 
     @timeit
     def handle(self, *args, **options):
-        uzum_categories = list(CategoriesModel.objects.all()[:100])
-        downloader = ProductsDownloader(uzum_categories)
+        limit = options["categories"]
+        concurrent = options["concurrent"]
+        uzum_categories = list(CategoriesModel.objects.all()[:limit])
+        downloader = ProductsDownloader(uzum_categories, concurrent)
         downloader.download()
