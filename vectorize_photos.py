@@ -1,10 +1,14 @@
-import os
-
 import numpy as np
+import os
 import tensorflow as tf
 import tensorflow_hub as hub
 
 from pricehub.products import timeit
+
+gpus = tf.config.list_physical_devices('GPU')
+for device in gpus:
+    print("Setting memory growth on:", device.name)
+    tf.config.experimental.set_memory_growth(device, True)
 
 
 def preprocess_image(image_path):
@@ -28,17 +32,17 @@ def vectorize_photos(photo_folder_path, num_photos=10):
     dataset = (
         tf.data.Dataset.from_tensor_slices(image_paths)
         .map(preprocess_image, num_parallel_calls=tf.data.AUTOTUNE)
-        .batch(32)
+        .batch(256)
         .prefetch(tf.data.AUTOTUNE)
     )
 
     vectors = vectorizer.predict(dataset)
     ids = np.array(ids, dtype=np.int32)
-    return vectors, ids
+    return vectors.astype(np.float16), ids
 
 
 def main():
-    photo_folder_path = '../down_go/photos/'
+    photo_folder_path = 'photos/'
     num_photos = 300_000
 
     vectors, ids = vectorize_photos(photo_folder_path, num_photos)
