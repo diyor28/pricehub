@@ -7,7 +7,7 @@ from asgiref.sync import sync_to_async
 from django.core.management.base import BaseCommand
 
 from pricehub.products import timeit
-from products.management.commands.utils import title_to_link, query, get_headers, variables
+from products.management.commands.utils import title_to_link, query, get_headers, variables, AsyncPool
 from products.models import CategoriesModel, ProductModel
 
 
@@ -46,20 +46,6 @@ class UzumClient:
 
     def aclose(self):
         return self.client.aclose()
-
-
-class AsyncPool:
-    def __init__(self, workers: int):
-        self.workers = workers
-        self._executing: list[asyncio.Task] = []
-
-    async def map(self, f: typing.Callable, iterable: typing.Iterable):
-        for el in iterable:
-            if len(self._executing) >= self.workers:
-                _, pending = await asyncio.wait(self._executing, return_when=asyncio.FIRST_COMPLETED)
-                self._executing = list(pending)
-            self._executing.append(asyncio.create_task(f(el)))
-        await asyncio.wait(self._executing, return_when=asyncio.ALL_COMPLETED)
 
 
 class ProductsDownloader:

@@ -1,12 +1,15 @@
+import argparse
 import asyncio
 import logging
 import os
+import typing
 
-import aiohttp
-from asgiref.sync import sync_to_async
+import httpx
+import tqdm
 from django.core.management.base import BaseCommand
 
-from pricehub.products import timeit
+from pricehub.products import timeit, Timer
+from products.management.commands.utils import AsyncPool
 from products.models import ProductModel
 
 logger = logging.getLogger(__name__)
@@ -14,56 +17,42 @@ logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = 'Download product photos'
+    client = httpx.AsyncClient(http2=True)
+    pbar: typing.Optional[tqdm.tqdm] = None
 
-    async def download_product_photos(self):
-        products = await sync_to_async(list)(ProductModel.objects.filter(photo__isnull=False).all()[:100])
-        os.makedirs('photos', exist_ok=True)
-        max_connections = 10
-
-        async with aiohttp.ClientSession() as session:
-            tasks = []
-
-            for product in products:
-                filename = f'product_{product.pk}.png'
-                save_path = os.path.join('photos', filename)
-
-                task = self.download_image(session, product.photo, save_path, filename)
-                tasks.append(task)
-
-                if len(tasks) >= max_connections:
-                    await asyncio.gather(*tasks)
-                    tasks = []
-
-            if tasks:
-                await asyncio.gather(*tasks)
-
+    async def download_product_photos(self, products: list[ProductModel], concurrent: int):
+        self.pbar = tqdm.tqdm(total=len(products))
+        pool = AsyncPool(concurrent)
+        await pool.map(self.download_image, products)
         logger.info('All photos downloaded successfully.')
+        await self.client.aclose()
+        self.pbar.close()
 
-    async def download_image(self, session, image_url, save_path, filename):
+    async def _download(self, url):
+        response = await self.client.get(url)
+        response.raise_for_status()
+        expected_size = int(response.headers['Content-Length'])
+        data = response.read()
+        assert len(data) == expected_size
+        return data
+
+    async def download_image(self, product: ProductModel):
+        save_path = os.path.join('photos', f'product_{product.pk}.png')
         try:
-            async with session.get(image_url) as response:
-                response.raise_for_status()
-                expected_size = int(response.headers['Content-Length'])
-                data = await response.read()
+            data = await self._download(product.photo)
+            with open(save_path, 'wb') as file:
+                file.write(data)
+        except Exception as e:
+            print('Some shit happened')
+            print(e)
+        self.pbar.update(1)
 
-                if len(data) != expected_size:
-                    raise ValueError('Incomplete download')
-
-                with open(save_path, 'wb') as file:
-                    file.write(data)
-
-                logger.info(f'Saved photo: {filename}')
-
-        except aiohttp.ClientError as e:
-            if isinstance(e, aiohttp.ClientResponseError) and e.status == 403:
-                logger.warning(f'Skipped photo: {filename} (Forbidden)')
-            else:
-                logger.error(f'Error downloading photo: {filename}')
-
-        except (ValueError, Exception) as e:
-            logger.error(f'Skipped photo: {filename} (Incomplete download)')
-            logger.error(f'Error: {str(e)}')
+    def add_arguments(self, parser: argparse.ArgumentParser):
+        parser.add_argument('--limit', type=int, default=400)
+        parser.add_argument('--concurrent', type=int, default=20)
 
     @timeit
-    def handle(self, *args, **options):
-        asyncio.run(self.download_product_photos())
+    def handle(self, *args, limit=1000, concurrent=10, **kwargs):
+        os.makedirs('photos', exist_ok=True)
+        products = list(ProductModel.objects.filter(photo__isnull=False).order_by('id').all()[:limit])
+        asyncio.run(self.download_product_photos(products, concurrent))

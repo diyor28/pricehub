@@ -1,4 +1,6 @@
+import asyncio
 import random
+import typing
 
 GLOBAL_HEADERS = {
     "Accept-Language": "ru-RU",
@@ -101,3 +103,17 @@ query getMakeSearch($queryInput: MakeSearchQueryInput!) {
   }
 }
 """
+
+
+class AsyncPool:
+    def __init__(self, workers: int):
+        self.workers = workers
+        self._executing: list[asyncio.Task] = []
+
+    async def map(self, f: typing.Callable, iterable: typing.Iterable):
+        for el in iterable:
+            if len(self._executing) >= self.workers:
+                _, pending = await asyncio.wait(self._executing, return_when=asyncio.FIRST_COMPLETED)
+                self._executing = list(pending)
+            self._executing.append(asyncio.create_task(f(el)))
+        await asyncio.wait(self._executing, return_when=asyncio.ALL_COMPLETED)
