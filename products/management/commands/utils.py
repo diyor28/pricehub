@@ -6,13 +6,13 @@ GLOBAL_HEADERS = {
     "x-content": "null",
     "apollographql-client-name": "web-customers",
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
-    "x-iid": "787a2323-62b9-482f-a3b6-c364de775f7a"
+    "x-iid": "35224928-0d61-4330-9b34-6901e1cc5134"
 }
 
 
 def get_headers():
     h = GLOBAL_HEADERS.copy()
-    h["x-iid"] = h["x-iid"].replace("6", str(random.randint(0, 9)))
+    h["x-iid"] = h["x-iid"].replace(str(random.randint(0, 9)), str(random.randint(0, 9)))
     return h
 
 
