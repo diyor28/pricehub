@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +57,7 @@ class Command(BaseCommand):
         dispatcher = updater.dispatcher
 
         dispatcher.add_handler(CommandHandler("start", self.start_command))
-        dispatcher.add_handler(MessageHandler(Filters.photo, self.image_received))
+        dispatcher.add_handler(MessageHandler(filters.photo, self.image_received))
 
         updater.start_polling()
         updater.idle()
