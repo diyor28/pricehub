@@ -7,10 +7,12 @@ import tensorflow as tf
 import tensorflow_hub as hub
 from PIL import Image
 from django.core.management.base import BaseCommand
-from numba import njit
+from numba import njit, prange
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext
 from telegram.ext.filters import MessageFilter
+
+from products.models import ProductModel
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +53,7 @@ class Command(BaseCommand):
         ])
         self.vectorizer.build([None, 256, 256, 3])
         data = np.load("vectorized_features.npz")
-        self.vectors, self.product_ids = data["vectors"], data["ids"]
+        self.vectors, self.product_ids = data["vectors"].astype(np.float32), data["ids"]
 
     def handle(self, *args, **options):
         token = '6001288764:AAHBfbPIcZUBWDNmFVDb9pBsn8moticRkrg'
@@ -64,7 +66,8 @@ class Command(BaseCommand):
         updater.start_polling()
         updater.idle()
 
-    def start_command(self, update: Update, context: CallbackContext):
+    @staticmethod
+    def start_command(update: Update, context: CallbackContext):
         update.message.reply_text('Bot started. Send an image to find similar products.')
 
     def image_received(self, update: Update, context: CallbackContext):
@@ -73,18 +76,15 @@ class Command(BaseCommand):
         image_data = image_file.download_as_bytearray()
 
         image = Image.open(BytesIO(image_data))
-        vector = self.vectorizer.predict(preprocess_image(image))[0]
+        vector = self.vectorizer.predict(preprocess_image(image), verbose=0)[0]
         scores = cosine_search(self.vectors, vector)
 
         n_closest = np.argsort(scores)[::-1][:5]
         closest_product_ids = self.product_ids[n_closest]
 
-        from products.models import ProductModel
-
         products = ProductModel.objects.filter(id__in=closest_product_ids)
 
         for product in products:
-            product_id = product.id
             title = product.title
             price = product.price
             url = product.url
