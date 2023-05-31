@@ -1,5 +1,7 @@
+# SBP BOT CODE
 import logging
 from io import BytesIO
+
 import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
@@ -9,28 +11,28 @@ from numba import njit, prange
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext
 from telegram.ext.filters import MessageFilter
+
 from products.models import ProductModel
 
 logger = logging.getLogger(__name__)
+
 
 class PhotoFilter(MessageFilter):
     def filter(self, message):
         return bool(message.photo)
 
+
 def preprocess_image(image):
     image = image.resize((256, 256))
     return np.array(image, dtype=np.float32)[np.newaxis] / 255
 
-def load_features(file_paths):
-    all_vectors = []
-    all_product_ids = []
-    for file_path in file_paths:
-        data = np.load(file_path)
-        vectors = data['vectors']
-        product_ids = data['ids']
-        all_vectors.append(vectors)
-        all_product_ids.append(product_ids)
-    return np.concatenate(all_vectors), np.concatenate(all_product_ids)
+
+def load_features(file_path):
+    data = np.load(file_path)
+    vectors = data['vectors']
+    product_ids = data['ids']
+    return vectors, product_ids
+
 
 @njit(parallel=True, fastmath=True)
 def cosine_search(index, vector):
@@ -39,6 +41,7 @@ def cosine_search(index, vector):
     for i in prange(index.shape[0]):
         scores[i] = np.dot(index[i], vector) / (np.linalg.norm(index[i]) * v_norm)
     return scores
+
 
 class Command(BaseCommand):
     help = 'Starts the bot'
@@ -49,8 +52,8 @@ class Command(BaseCommand):
             hub.KerasLayer("https://tfhub.dev/google/imagenet/inception_resnet_v2/feature_vector/5", trainable=False)
         ])
         self.vectorizer.build([None, 256, 256, 3])
-        file_paths = ["vectorized_features1.npz", "vectorized_features2.npz"]
-        self.vectors, self.product_ids = load_features(file_paths)
+        data = np.load("vectorized_features.npz")
+        self.vectors, self.product_ids = data["vectors"].astype(np.float32), data["ids"]
 
     def handle(self, *args, **options):
         token = '6001288764:AAHBfbPIcZUBWDNmFVDb9pBsn8moticRkrg'
