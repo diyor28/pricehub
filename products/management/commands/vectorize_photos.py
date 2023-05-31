@@ -46,7 +46,7 @@ def main():
     num_photos = 300_000
 
     vectors, ids = vectorize_photos(photo_folder_path, num_photos)
-    np.savez('vectorized_features.npz', vectors=vectors, ids=ids)
+    np.savez('../../../vectorized_features.npz', vectors=vectors, ids=ids)
 
 
 if __name__ == '__main__':
