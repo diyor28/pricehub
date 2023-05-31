@@ -45,6 +45,7 @@ def translit(text):
         "х": "x",
         "ц": "ts",
         "ч": "ch",
+        "ш": "sh",  # Ozod dnishe
         "щ": "sh",
         "ъ": "",
         "ы": "i",
