@@ -1,30 +1,28 @@
 # SBP BOT CODE
-from django.core.management.base import BaseCommand
-from PIL import Image
-from io import BytesIO
 import logging
+from io import BytesIO
+
 import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
-from telegram import Update, InputMediaPhoto
+from PIL import Image
+from django.core.management.base import BaseCommand
+from numba import njit
+from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext
 from telegram.ext.filters import MessageFilter
 
 logger = logging.getLogger(__name__)
 
-vectorizer = None
-vectors = None
-product_ids = None
 
 class PhotoFilter(MessageFilter):
     def filter(self, message):
         return bool(message.photo)
 
+
 def preprocess_image(image):
     image = image.resize((256, 256))
-    image = np.array(image)
-    image = tf.cast(image, tf.float32) / 255.0
-    return image
+    return np.array(image, dtype=np.float32)[np.newaxis] / 255
 
 
 def load_features(file_path):
@@ -34,30 +32,29 @@ def load_features(file_path):
     return vectors, product_ids
 
 
-def cosine_search(vectorizer, index, vector):
+@njit(parallel=True, fastmath=True)
+def cosine_search(index, vector):
     v_norm = np.linalg.norm(vector)
-    vector = tf.expand_dims(vector, axis=0)
-    vector = vectorizer.predict(vector)[0]
-    scores = np.dot(index, vector) / (np.linalg.norm(index, axis=1) * v_norm)
+    scores = np.zeros((index.shape[0],))
+    for i in prange(index.shape[0]):
+        scores[i] = np.dot(index[i], vector) / (np.linalg.norm(index[i]) * v_norm)
     return scores
 
 
 class Command(BaseCommand):
     help = 'Starts the bot'
 
-    def handle(self, *args, **options):
-        global vectorizer, vectors, product_ids
-
-        token = '6001288764:AAHBfbPIcZUBWDNmFVDb9pBsn8moticRkrg'
-        file_path = 'vectorized_features.npz'
-
-        vectorizer = tf.keras.Sequential([
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.vectorizer = tf.keras.Sequential([
             hub.KerasLayer("https://tfhub.dev/google/imagenet/inception_resnet_v2/feature_vector/5", trainable=False)
         ])
-        vectorizer.build([None, 256, 256, 3])
+        self.vectorizer.build([None, 256, 256, 3])
+        data = np.load("vectorized_features.npz")
+        self.vectors, self.product_ids = data["vectors"], data["ids"]
 
-        vectors, product_ids = load_features(file_path)
-
+    def handle(self, *args, **options):
+        token = '6001288764:AAHBfbPIcZUBWDNmFVDb9pBsn8moticRkrg'
         updater = Updater(token)
         dispatcher = updater.dispatcher
 
@@ -71,19 +68,16 @@ class Command(BaseCommand):
         update.message.reply_text('Bot started. Send an image to find similar products.')
 
     def image_received(self, update: Update, context: CallbackContext):
-        global vectorizer, vectors, product_ids
-
         photo = update.message.photo[-1]
         image_file = context.bot.get_file(photo.file_id)
         image_data = image_file.download_as_bytearray()
 
         image = Image.open(BytesIO(image_data))
-        processed_image = preprocess_image(image)
-
-        scores = cosine_search(vectorizer, vectors, processed_image)
+        vector = self.vectorizer.predict(preprocess_image(image))[0]
+        scores = cosine_search(self.vectors, vector)
 
         n_closest = np.argsort(scores)[::-1][:5]
-        closest_product_ids = product_ids[n_closest]
+        closest_product_ids = self.product_ids[n_closest]
 
         from products.models import ProductModel
 
