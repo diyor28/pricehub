@@ -1,6 +1,6 @@
 import numpy as np
 
-data = np.load('vectorized_features.npz')
+data = np.load('../../../vectorized_features.npz')
 
 ids = data['ids']
 vectors = data['vectors']

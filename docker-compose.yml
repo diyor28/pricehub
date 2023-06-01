@@ -1,20 +1,20 @@
 version: '3.8'
 
 services:
-  nginx:
-    build:
-      context: .
-      target: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: always
-    volumes:
-      - ~/volumes/media:/www/media
-      - ./static:/www/static
-      - /etc/letsencrypt/:/etc/letsencrypt/
-    depends_on:
-      - back
+#  nginx:
+#    build:
+#      context: .
+#      target: nginx
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    restart: always
+#    volumes:
+#      - ~/volumes/media:/www/media
+#      - ./static:/www/static
+#      - /etc/letsencrypt/:/etc/letsencrypt/
+#    depends_on:
+#      - back
 
   back:
     build:
