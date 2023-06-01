@@ -1,193 +1,114 @@
-from concurrent.futures import ThreadPoolExecutor
+import asyncio
+import typing
 
-import requests
+import httpx
+import tqdm
+from asgiref.sync import sync_to_async
 from django.core.management.base import BaseCommand
 
 from pricehub.products import timeit
+from products.management.commands.utils import title_to_link, query, get_headers, variables, AsyncPool
 from products.models import CategoriesModel, ProductModel
 
-session = requests.Session()
+
+class UzumClient:
+
+    def __init__(self):
+        limits = httpx.Limits(max_keepalive_connections=20, max_connections=100)
+        self.client = httpx.AsyncClient(http2=True, limits=limits)
+
+    async def _get_page(self, v):
+        response = await self.client.post("https://graphql.umarket.uz", json={
+            "query": query,
+            "variables": v,
+        }, headers=get_headers())
+        resp = response.json()
+        if resp.get("errors"):
+            raise ValueError(resp.get("errors"))
+        data = resp["data"]["makeSearch"]
+        return data
+
+    async def download_products(self, categoryId: int):
+        products = []
+        limit = 100
+        for offset in range(0, 100_000, limit):
+            try:
+                data = await self._get_page(variables(categoryId, offset, limit))
+            except ValueError as e:
+                print(e)
+                break
+            if not data["items"]:
+                return []
+            products += [p["catalogCard"] for p in data["items"]]
+            if data["total"] < offset + limit:
+                break
+        return products
+
+    def aclose(self):
+        return self.client.aclose()
 
 
-def translit(text):
-    map = {
-        "а": "a",
-        "б": "b",
-        "в": "v",
-        "г": "g",
-        "д": "d",
-        "е": "ye",
-        "ё": "yo",
-        "ж": "j",
-        "з": "z",
-        "и": "i",
-        "й": "y",
-        "к": "k",
-        "л": "l",
-        "м": "m",
-        "н": "n",
-        "о": "o",
-        "п": "p",
-        "р": "r",
-        "с": "s",
-        "т": "t",
-        "у": "u",
-        "ф": "f",
-        "х": "x",
-        "ц": "ts",
-        "ч": "ch",
-        "щ": "sh",
-        "ъ": "",
-        "ы": "i",
-        "ь": "",
-        "э": "e",
-        "ю": "yu",
-        "я": "ya",
-    }
-    result = ""
-    for i, l in enumerate(text.lower()):
-        t = map.get(l, l)
-        result += t.upper() if text[i].isupper() else t
-    return result
+class ProductsDownloader:
+    client: UzumClient
 
+    def __init__(self, categories: list[CategoriesModel], concurrent: int):
+        self.categories = categories
+        self.concurrent = concurrent
+        self.pbar = tqdm.tqdm(total=len(categories))
+        self.client = UzumClient()
 
-def title_to_link(title: str):
-    parts = title.split(" ")
-    if len(parts) > 5:
-        parts = parts[:3]
-    title = "-".join(parts)
-    result = "".join(l for l in title if l.isalpha() or l == "-")
-    return "https://uzum.uz/ru/product/" + translit(result)
+    @staticmethod
+    async def _save_products(category: CategoriesModel, products: list[dict]):
+        to_be_created = []
+        existing: list[ProductModel] = await sync_to_async(list)(ProductModel.objects.filter(uzum_remote_id__in=[p["productId"] for p in products]).all())
+        existing_ids = [ex.uzum_remote_id for ex in existing]
+        for p in products:
+            product_id = str(p['productId'])
+            price = p["minSellPrice"]
+            title = p["title"]
+            photo = p["photos"][0]["link"]["high"]
+            url = title_to_link(p["title"]) + f"-{product_id}"
+            if product_id in existing_ids:
+                continue
+            to_be_created.append(ProductModel(
+                title=title,
+                price=price,
+                uzum_remote_id=product_id,
+                category_id=category.id,
+                anchor_category_id=category.anchor_id,
+                photo=photo,
+                url=url
+            ))
+        await sync_to_async(ProductModel.objects.bulk_create)(to_be_created)
 
+    async def process_category(self, category: CategoriesModel):
+        products = await self.client.download_products(int(category.remote_id))
+        seen = set()
+        products = [seen.add(p["productId"]) or p for p in products if p["productId"] not in seen]
+        await self._save_products(category, products)
+        self.pbar.update(1)
 
-def variables(categoryId: int, offset: int, limit: int):
-    return {
-        "queryInput": {
-            "categoryId": str(categoryId),
-            "showAdultContent": "TRUE",
-            "filters": [],
-            "sort": "BY_ORDERS_NUMBER_DESC",
-            "pagination": {
-                "offset": offset,
-                "limit": limit
-            }
-        }
-    }
+    async def _async_download(self):
+        pool = AsyncPool(self.concurrent)
+        await pool.map(self.process_category, self.categories)
+        await self.client.aclose()
+        self.pbar.close()
 
-
-def _get_products(v):
-    query = """
-    query getMakeSearch($queryInput: MakeSearchQueryInput!) {
-      makeSearch(query: $queryInput) {
-        id
-        queryId
-        queryText
-        items {
-          catalogCard {
-            __typename
-            ...SkuGroupCardFragment
-          }
-          __typename
-        }
-        total
-        mayHaveAdultContent
-        __typename
-      }
-    }
-
-    fragment SkuGroupCardFragment on SkuGroupCard {
-      ...DefaultCardFragment
-      __typename
-    }
-
-    fragment DefaultCardFragment on CatalogCard {
-      feedbackQuantity
-      id
-      minFullPrice
-      minSellPrice
-      ordersQuantity
-      productId
-      rating
-      title
-      __typename
-      photos {
-        key
-        link(trans: PRODUCT_540) {
-          high
-          low
-          __typename
-        }
-        previewLink: link(trans: PRODUCT_240) {
-          high
-          low
-          __typename
-        }
-        __typename
-      }
-    }
-    """
-    response = session.post("https://graphql.umarket.uz", json={
-        "query": query,
-        "variables": v,
-    }, headers={
-        "Accept-Language": "ru-RU",
-        "Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==",
-        "x-content": "null",
-        "apollographql-client-name": "web-customers",
-        "User-Agent": "*",
-        "x-iid": "787a2323-62b9-482f-a3b6-c364de775f7a"
-    })
-    resp = response.json()
-    if resp.get("errors"):
-        raise ValueError(resp.get("errors"))
-    data = resp["data"]["makeSearch"]
-    return data
-
-
-def download_products(categoryId: int):
-    products = []
-    limit = 100
-    for offset in range(0, 100_000, limit):
-        data = _get_products(variables(categoryId, offset, limit))
-        if not data["items"]:
-            return
-        products += data["items"]
-        if data["total"] < offset + limit:
-            break
-    return [p["catalogCard"] for p in products]
-
-
-def download_for_category(category):
-    products = download_products(int(category.remote_id))
-    to_be_saved = []
-    for p in products:
-        product = ProductModel(
-            title=p['title'],
-            price=p['minSellPrice'],
-            category_id=category.id,
-            anchor_category_id=category.anchor_id,
-            photo=p['photos'][0]['link']['high'],
-            url=title_to_link(p['title']) + f"-{p['id']}"
-        )
-        to_be_saved.append(product)
-    ProductModel.objects.bulk_create(to_be_saved)
+    def download(self):
+        asyncio.run(self._async_download())
 
 
 class Command(BaseCommand):
-    help = 'Closes the specified poll for voting'
+    help = 'Download products'
+
+    def add_arguments(self, parser):
+        parser.add_argument('--categories', type=int, default=500)
+        parser.add_argument('--concurrent', type=int, default=4)
 
     @timeit
     def handle(self, *args, **options):
-        ids = [1251, 1252, 1253, 1254, 1255, 1256,
-               1257, 1258, 1259, 1260, 1267,
-               1268, 1269, 1270, 1271, 1272, 1273,
-               1274, 1275, 1276, 1277, 1278, 1279]
-        uzum_categories = CategoriesModel.objects.filter(id__in=ids)
-        futures = []
-        with ThreadPoolExecutor(10) as executor:
-            for uzum_category in uzum_categories:
-                rs = executor.submit(download_for_category, uzum_category)
-                futures.append(rs)
-
-        for ft in futures:
-            ft.result()
+        limit = options["categories"]
+        concurrent = options["concurrent"]
+        uzum_categories = list(CategoriesModel.objects.order_by('id').all()[:limit])
+        downloader = ProductsDownloader(uzum_categories, concurrent)
+        downloader.download()

@@ -27,11 +27,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         categories = get_categories()
-        for category in categories:
-            save_data = CategoriesModel(
-                title=category["title"],
-                remote_id=category["id"],
-                source="uzum"
-            )
-            save_data.save()
+        to_be_saved = [CategoriesModel(title=cat["title"], remote_id=cat["id"], source="uzum") for cat in categories]
+        CategoriesModel.objects.bulk_create(to_be_saved)
         self.stdout.write(self.style.SUCCESS('Categories downloaded successfully.'))

@@ -1,10 +1,33 @@
 import random
 
 from rest_framework import routers, serializers, viewsets
+from rest_framework.exceptions import ParseError
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from products.models import ProductModel, CategoriesModel
 
 random.seed(322)
+
+from rest_framework.authentication import SessionAuthentication
+
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
+
+
+class AddToFavoritesApi(APIView):
+    authentication_classes = (CsrfExemptSessionAuthentication, SessionAuthentication)
+
+    def post(self, request):
+        product_id = request.POST.get('product_id')
+        if not product_id:
+            raise ParseError(detail='field product_id is required')
+        product = ProductModel.objects.get(pk=product_id)
+        product.users.add(request.user.id)
+        return Response({"ok": True})
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -28,8 +51,6 @@ class ProductsViewSet(viewsets.ModelViewSet):
         queryset = ProductModel.objects.all()
         query_params = self.request.query_params
         q = query_params.get('q', '')
-        limit = int(query_params.get("limit", "100"))
-        offset = int(query_params.get("offset", "0"))
         sort = query_params.get("sort", "id")
 
         price_gt = int(query_params.get("price_gt", "0"))
@@ -53,8 +74,6 @@ class ProductsViewSet(viewsets.ModelViewSet):
 
         if q:
             queryset = queryset.filter(title__contains=q)
-
-        queryset = queryset[offset:offset + limit]
         return queryset
 
 

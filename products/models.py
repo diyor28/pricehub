@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -24,15 +25,34 @@ class CategoriesModel(models.Model):
 
 
 class ProductModel(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=500)
     price = models.FloatField(db_index=True)
-    photo = models.URLField(null=True)
+    photo = models.URLField(null=True, max_length=500)
     url = models.URLField(null=True)
+    uzum_remote_id = models.CharField(max_length=255, null=True)
+    sku = models.CharField(max_length=255, null=True)
     anchor_category = models.ForeignKey(AnchorCategoriesModel, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(CategoriesModel, on_delete=models.SET_NULL, null=True)
+    users = models.ManyToManyField(User, related_name='favorite_products')
 
     def __str__(self):
         return f"Product(title = {self.title}, photo={self.photo})"
 
     class Meta:
         db_table = "products"
+
+
+class ProductPhotoModel(models.Model):
+    original = models.URLField()
+    large = models.URLField()
+    small = models.URLField()
+    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "product_photos"
+
+
+class PriceHistory(models.Model):
+    price = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE, related_name='prices')
