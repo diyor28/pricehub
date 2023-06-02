@@ -1,29 +1,16 @@
-import requests
+from django.contrib import messages
+from django.contrib.auth import login, authenticate
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
 from pricehub.forms import LoginForm
+from products.management.commands.download_categories import get_categories
 from products.models import ProductModel
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
-}
-users = {
-    "ozod@gmail.com": {
-        "firstName": "Ozod",
-        "lastName": "Shukurov",
-        "password": "1234"
-    },
-    "amir@gmail.com": {
-        "firstName": "Amir",
-        "lastName": "Akhtamov",
-        "password": "qwerty123"
-    },
-    "ibrogim@gmail.com": {
-        "firstName": "Ibrogim",
-        "lastName": "Miraliev",
-        "password": "pass123"
-    }
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+    "authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA=="
 }
 
 
@@ -50,35 +37,17 @@ class HomePage(View):
             {"title": "Auto Parts"},
             {"title": "Babies & Kids"}
         ]
-        products = ProductModel.objects.all()
-        return render(request, 'index.html', context={"categories": categories, "products": products})
+        return render(request, 'index.html', context={"categories": categories})
 
 
 class PriceComparator(View):
     template_name = "comparison.html"
 
-    def get(self, request, *args, **kwargs):
-        phone_a = "https://api.umarket.uz/api/v2/product/231855"
-        phone_b = "https://api.umarket.uz/api/v2/product/287201"
-        response_a = requests.get(phone_a, headers=headers).json()
-        response_b = requests.get(phone_b, headers=headers).json()
-        product_a = response_a["payload"]["data"]
-        product_b = response_b["payload"]["data"]
-        context = {
-            "phoneA": {
-                "title": product_a["title"],
-                "url": product_a["photos"][0]["photo"]["800"]["high"],
-                "CPU": product_a["attributes"][0],
-                "mainCam": product_a["attributes"][8]
-            },
-            "phoneB": {
-                "title": product_b["title"],
-                "url": product_b["photos"][0]["photo"]["800"]["high"],
-                "CPU": product_b["attributes"][1],
-                "mainCam": product_b["attributes"][3]
-            }
-        }
-        return render(request, "comparison.html", context=context)
+    def get(self, request, p_id: int, p2_id: int, *args, **kwargs):
+        productA = ProductModel.objects.get(id=p_id)
+        productB = ProductModel.objects.get(id=p2_id)
+        context = {'productA': productA, 'productB': productB}
+        return render(request, "comparison.html", context)
 
 
 class Login(View):
@@ -87,35 +56,32 @@ class Login(View):
 
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
-        if not form.is_valid():
-            return render(request, "login.html", context={"error": "The form has been filled out incorrectly check email and password"})
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                return redirect('/profile')
 
-        user = users.get(form.cleaned_data['email'], None)
-        if user is None:
-            return render(request, "login.html", context={"error": "login is incorrect"})
-
-        saved_password = user["password"]
-        if form.cleaned_data['password'] != saved_password:
-            return render(request, "login.html", context={"error": "password is incorrect"})
-
-        return redirect('/')
+            # form is not valid or user is not authenticated
+            messages.error(request, f'Invalid username or password')
+        return redirect('/categories')
 
 
 class CategoriesView(View):
-    def category_box(self, categories):
-        items = []
-        for category in categories:
-            if category["children"]:
-                items += self.category_box(category["children"])
-            else:
-                items.append(category)
-        return items
-
-    def get_categories(self):
-        response = requests.get("https://api.umarket.uz/api/main/root-categories?eco=false", headers={"Authorization": "Basic YjJjLWZyb250OmNsaWVudFNlY3JldA==", "Accept-Language": "ru-RU"})
-        categories = response.json()["payload"]
-        return self.category_box(categories[:100])
-
     def get(self, request):
-        categories = self.get_categories()
+        categories = get_categories()
         return render(request, 'categories.html', {'categories': categories})
+
+
+class ProfileView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('/login')
+        favorites = request.user.favorite_products.all()
+        return render(request, 'profile.html', {"favorites": favorites})
+
+class  ProductView(View):
+    def get(self, request):
+        return render(request, 'product.html')

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Categories</title>
+    <style>
+        .main {
+            padding: 20px;
+            width: 30%;
+            height: 79.1vh;
+            margin: 10px 30px 10px 30px;
+        }
+
+        input {
+            outline: none;
+            font-size: 14px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid gray;
+            width: 100%;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .save {
+            color: white;
+            background: black;
+            font-size: 18px;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            margin-top: 10px;
+        }
+
+        h1 {
+            font-size: 35px;
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .profile-header p {
+            color: #646464;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: gray;
+            border-radius: 100%;
+            margin-bottom: 20px;
+            background-image: url("../static/assetes/avatar.jpg");
+            background-position: 3px -20px;
+            background-size: 100% 150%;
+        }
+
+        span {
+            color: #646464;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %}
+    <div class="main">
+        <div class="profile-header">
+            <h1>Profile</h1>
+            <p>Update your profile details below</p>
+        </div>
+        <div class="form">
+            <div class="avatar"></div>
+            <span>Profile picture</span>
+            <form action="">
+                <input type="text" placeholder="First Name">
+                <input type="text" placeholder="Last Name">
+                <input type="email" placeholder="Email">
+                <input type="text" placeholder="Username">
+                <button class="save">Save</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+</body>
+</html>

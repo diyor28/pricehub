@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  certbot:
+    build:
+      target: cert-bot
+    volumes:
+      - /etc/letsencrypt/:/etc/letsencrypt/
+    ports:
+      - "80:80"
+      - "443:443"
