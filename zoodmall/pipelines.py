@@ -1,8 +1,8 @@
 import os
-import json
 
 from scrapy import signals
 from scrapy.crawler import Crawler
+from numba import jit
 
 from pricehub.products import timeit
 from .spiders.zoodmall import ZoodMallSpider
@@ -26,22 +26,24 @@ class ZoodmallPipeline:
         if not os.path.exists("data"):
             os.makedirs("data")
 
-        if os.path.exists("data/data.json"):
-            os.remove("data/data.json")
+        if os.path.exists("data/data.txt"):
+            os.remove("data/data.txt")
 
     def spider_closed(self, spider: ZoodMallSpider):
         self.save_products()
+        let = os.system('scrapy crawl zoodmall')
+        print(let)
 
     @timeit
     def save_products(self):
-        with open("data/data.json", "a") as outfile:
-            json.dump(self.items, outfile)
-
+        with open("data/data.txt", "a") as outfile:
+            for i in self.items:
+                outfile.writelines(f'{i["title"]} | {i["price"]} | {i["sku"]} | {i["photo"]} | {i["url"]}\n\n')
         self.items = []
 
+    @timeit
     def process_item(self, item: dict, spider: ZoodMallSpider):
         self.items.append(item)
+        self.save_products()
         self.pages_crawled += 1
-        if len(self.items) > 10:
-            self.save_products()
         return item

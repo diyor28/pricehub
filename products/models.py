@@ -28,7 +28,7 @@ class ProductModel(models.Model):
     title = models.CharField(max_length=500)
     price = models.FloatField(db_index=True)
     photo = models.URLField(null=True, max_length=500)
-    url = models.URLField(null=True)
+    url = models.URLField(null=True, max_length=500)
     uzum_remote_id = models.CharField(max_length=255, null=True)
     sku = models.CharField(max_length=255, null=True)
     anchor_category = models.ForeignKey(AnchorCategoriesModel, on_delete=models.SET_NULL, null=True)

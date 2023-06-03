@@ -108,7 +108,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'pricehub',
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'PASSWORD': 'ozod',
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': 5432
     }
