@@ -3,7 +3,6 @@ import os
 from scrapy import signals
 from scrapy.crawler import Crawler
 
-from pricehub.products import timeit
 from .spiders.zoodmall import ZoodMallSpider
 
 
@@ -31,7 +30,6 @@ class ZoodmallPipeline:
     def spider_closed(self, spider: ZoodMallSpider):
         self.save_products()
 
-    @timeit
     def save_products(self):
         with open("data/data.txt", "a", encoding="utf-8") as outfile:
             for i in self.items:
