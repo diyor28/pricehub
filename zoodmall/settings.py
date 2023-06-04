@@ -17,10 +17,10 @@ USER_AGENT = '*'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 LOG_LEVEL = 'INFO'
-CLOSESPIDER_PAGECOUNT = 150
+CLOSESPIDER_PAGECOUNT = 300
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-# CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
