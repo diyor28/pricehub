@@ -31,5 +31,4 @@ class Command(BaseCommand):
                     products.append(product)
         ProductModel.objects.bulk_create(products)
         self.stdout.write(self.style.SUCCESS('Products from .txt downloaded successfully.'))
-        os.remove("data/data.txt")
 

@@ -2,18 +2,13 @@ import json
 import re
 
 from scrapy.http import HtmlResponse
-from scrapy.spiders import SitemapSpider
+from scrapy.spiders import SitemapSpider, Rule
 
 
 class ZoodMallSpider(SitemapSpider):
     name = "zoodmall"
     allowed_domains = ["zoodmall.uz"]
     sitemap_urls = ["https://www.zoodmall.uz/sitemaps/sitemap_product.xml"]
-    custom_settings = {
-        'CONCURRENT_REQUESTS': 10000,
-        'CLOSESPIDER_PAGECOUNT': 400,
-        'DOWNLOAD_DELAY': 0
-    }
 
     def start_requests(self):
         for request in super().start_requests():
