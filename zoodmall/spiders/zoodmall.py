@@ -2,7 +2,7 @@ import json
 import re
 
 from scrapy.http import HtmlResponse
-from scrapy.spiders import SitemapSpider, Rule
+from scrapy.spiders import SitemapSpider
 
 
 class ZoodMallSpider(SitemapSpider):

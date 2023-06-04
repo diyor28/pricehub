@@ -8,7 +8,6 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = 'zoodmall'
-
 SPIDER_MODULES = ['zoodmall.spiders']
 NEWSPIDER_MODULE = 'zoodmall.spiders'
 
@@ -17,7 +16,6 @@ USER_AGENT = '*'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
-CLOSESPIDER_PAGECOUNT = 50
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
@@ -65,7 +63,6 @@ CLOSESPIDER_PAGECOUNT = 50
 ITEM_PIPELINES = {
     'zoodmall.pipelines.ZoodmallPipeline': 300,
 }
-
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
