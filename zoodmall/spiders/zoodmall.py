@@ -8,7 +8,12 @@ from scrapy.spiders import SitemapSpider
 class ZoodMallSpider(SitemapSpider):
     name = "zoodmall"
     allowed_domains = ["zoodmall.uz"]
-    sitemap_urls = ["https://www.zoodmall.uz/sitemaps/sitemap_product.xml"]
+    sitemap_urls = ["https://www.zoodmall.uz/sitemaps/sitemap_product7.xml"]
+
+    custom_settings = {
+        'CONCURRENT_REQUESTS': 100,  # Disable request concurrency limit
+        'CONCURRENT_ITEMS': 1000
+    }
 
     def start_requests(self):
         for request in super().start_requests():
@@ -20,8 +25,8 @@ class ZoodMallSpider(SitemapSpider):
         ld_json = response.xpath("//script[@type='application/ld+json'][contains(text(), 'sku')]/text()").get()
         ld_dict = json.loads(ld_json)
         price = int(''.join(digits))
-        title = response.xpath("//h1/text()").get()
-        sku = ld_dict['sku']
-        photo_url = response.xpath("//meta[@property='og:image']/@content").get()
-        product_url = response.xpath("//meta[@property='og:url']/@content").get()
+        title = str(response.xpath("//h1/text()").get()).encode('utf-8')
+        sku = str(ld_dict['sku'])
+        photo_url = str(response.xpath("//meta[@property='og:image']/@content").get())
+        product_url = str(response.xpath("//meta[@property='og:url']/@content").get())
         return dict(price=price, title=title, sku=sku, photo=photo_url, url=product_url)
