@@ -1,5 +1,4 @@
 import asyncio
-import typing
 
 import httpx
 import tqdm
