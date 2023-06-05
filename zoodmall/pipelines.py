@@ -60,7 +60,6 @@ async def run_spider():
 
 
 async def main():
-    pipeline = ZoodmallPipeline()
     tasks = []
 
     async with aiohttp.ClientSession() as session:
