@@ -1,6 +1,8 @@
 import argparse
 import os
 
+import tensorflow_hub as hub
+
 from pricehub import settings
 from pricehub.products import timeit
 
@@ -11,7 +13,6 @@ from django.core.management import BaseCommand
 from numba import njit, prange
 
 from products.models import ProductModel
-import tensorflow_hub as hub
 
 
 @njit(parallel=True, fastmath=True)
@@ -49,14 +50,14 @@ class Command(BaseCommand):
         m = tf.keras.Sequential([
             hub.KerasLayer("https://tfhub.dev/tensorflow/efficientnet/lite0/feature-vector/2", trainable=False)
         ])
-        m.build((224, 224, 3))
+        m.build((None, 224, 224, 3))
         return m
 
     @staticmethod
     def _load_image(path: str):
         image = tf.io.read_file(path)
         image = tf.image.decode_image(image, expand_animations=False, channels=3)
-        image = tf.image.resize(image, (224, 224))
+        image = tf.image.resize(image, (224, 224)) / 255
         return tf.expand_dims(image, axis=0)
 
     def add_arguments(self, parser: argparse.ArgumentParser):
