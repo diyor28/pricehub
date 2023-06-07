@@ -94,7 +94,7 @@ class BotHandler:
         vector = self.model.predict(self._load_image(path), verbose=0)
         scores = l2_distance(self.index, vector[0])
         n_closest = np.argsort(scores)[:3]
-        closest_product_ids = np.array(self.product_ids)[n_closest]
+        closest_product_ids = np.array(self.product_ids)[n_closest.tolist()]
         products = ProductModel.objects.filter(id__in=closest_product_ids)
         result = ""
         for product in products:
@@ -121,11 +121,13 @@ class BotHandler:
     def _handle_photo(self, update: Update, context: CallbackContext):
         file_id = update.message.photo[-1].file_id
         file = context.bot.get_file(file_id)
-        file_path = file.file_path
-        image_path = os.path.join('tmp', os.path.basename(file_path))
-        file.download(image_path)
 
-        result = self._process_image(image_path)
+        image_bytes = file.download_as_bytearray()
+        image = tf.image.decode_image(image_bytes, channels=3)
+        image = tf.image.resize(image, (224, 224)) / 255
+        image = tf.expand_dims(image, axis=0)
+
+        result = self._process_image(image)
 
         if result:
             context.bot.send_message(chat_id=update.effective_chat.id, text=result, parse_mode='HTML')
