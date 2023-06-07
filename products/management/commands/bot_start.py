@@ -1,15 +1,15 @@
-import os
-import logging
 import argparse
+import logging
+import os
 
-import tensorflow_hub as hub
 import numpy as np
 import tensorflow as tf
+import tensorflow_hub as hub
+from django.core.management.base import BaseCommand
+from numba import njit, prange
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
-from numba import njit, prange
 
-from django.core.management.base import BaseCommand
 from products.models import ProductModel
 
 os.environ['CUDA_VISIBLE_DEVICES'] = "-1"
@@ -29,7 +29,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser: argparse.ArgumentParser):
         parser.add_argument('--token', type=str, help='Telegram Bot token',
                             default="6001288764:AAHBfbPIcZUBWDNmFVDb9pBsn8moticRkrg")
-        parser.add_argument('--index', type=str, help='Path to the index directory', default="index")
+        parser.add_argument('--index', type=str, help='Path to the index directory', default="data")
 
     def handle(self, *args, **options):
         token = options['token']
@@ -56,16 +56,9 @@ class BotHandler:
         self.model = self._build_model()
 
     def _load_index(self):
-        data_files = [f for f in os.listdir(self.index_dir) if f.endswith('.npz')]
-        index = []
-        product_ids = []
-        for file in data_files:
-            data = np.load(os.path.join(self.index_dir, file))
-            index.append(data['vectors'].astype(np.float32))
-            product_ids.extend(data['ids'])
-            del data
-        self.index = np.concatenate(index, axis=0)
-        self.product_ids = product_ids
+        data = np.load(os.path.join(self.index_dir, 'index.npz'))
+        self.index = data['vectors'].astype(np.float32)
+        self.product_ids = data['ids']
 
     @staticmethod
     def _build_model():
@@ -86,12 +79,8 @@ class BotHandler:
         vector = self.model.predict(image, verbose=0)
         scores = l2_distance(self.index, vector[0])
         n_closest = np.argsort(scores)[:3]
-        closest_product_ids = np.array(self.product_ids)[n_closest.tolist()]
-        products = ProductModel.objects.filter(id__in=closest_product_ids)
-        result = ""
-        for product in products:
-            result += f"{product.title}\n<b>{product.price}</b>\n{product.url}\n\n"
-        return result
+        closest_product_ids = self.product_ids[n_closest.tolist()]
+        return ProductModel.objects.filter(id__in=closest_product_ids)
 
     def _create_bot(self):
         updater = Updater(self.token, use_context=True)
@@ -114,11 +103,17 @@ class BotHandler:
         file_id = update.message.photo[-1].file_id
         file = context.bot.get_file(file_id)
         file_path = file.file_path
-        image_path = os.path.join('tmp', os.path.basename(file_path))
+        image_path = os.path.join('data', os.path.basename(file_path))
         file.download(image_path)
-        result = self._process_image(self._load_image(image_path))
+        products = self._process_image(self._load_image(image_path))
 
-        if result:
-            context.bot.send_message(chat_id=update.effective_chat.id, text=result, parse_mode='HTML')
-        else:
-            context.bot.send_message(chat_id=update.effective_chat.id, text="No matching products found.")
+        for product in products:
+            title = product.title
+            price = product.price
+            url = product.url
+            photo_data = product.photo
+
+            context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_data)
+
+            response = f"{title}\n<b>{price}</b>\n{url}\n\n"
+            update.message.reply_html(response)
