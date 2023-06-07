@@ -16,15 +16,6 @@ os.environ['CUDA_VISIBLE_DEVICES'] = "-1"
 
 
 @njit(parallel=True, fastmath=True)
-def cosine_search(index, vector):
-    v_norm = np.linalg.norm(vector)
-    scores = np.zeros((index.shape[0],))
-    for i in prange(index.shape[0]):
-        scores[i] = np.dot(index[i], vector) / (np.linalg.norm(index[i]) * v_norm)
-    return scores
-
-
-@njit(parallel=True, fastmath=True)
 def l2_distance(index, vector):
     scores = np.zeros((index.shape[0],))
     for i in prange(index.shape[0]):
@@ -36,8 +27,9 @@ class Command(BaseCommand):
     help = 'Starts the Product Search Bot'
 
     def add_arguments(self, parser: argparse.ArgumentParser):
-        parser.add_argument('--token', type=str, help='Telegram Bot token')
-        parser.add_argument('--index', type=str, help='Path to the index directory')
+        parser.add_argument('--token', type=str, help='Telegram Bot token',
+                            default="6001288764:AAHBfbPIcZUBWDNmFVDb9pBsn8moticRkrg")
+        parser.add_argument('--index', type=str, help='Path to the index directory', default="index")
 
     def handle(self, *args, **options):
         token = options['token']
@@ -71,7 +63,7 @@ class BotHandler:
             data = np.load(os.path.join(self.index_dir, file))
             index.append(data['vectors'].astype(np.float32))
             product_ids.extend(data['ids'])
-            del data  # Release memory occupied by the loaded file
+            del data
         self.index = np.concatenate(index, axis=0)
         self.product_ids = product_ids
 
@@ -84,14 +76,14 @@ class BotHandler:
         return m
 
     @staticmethod
-    def _load_image(path: str):
+    def _load_image(path):
         image = tf.io.read_file(path)
         image = tf.image.decode_image(image, expand_animations=False, channels=3)
         image = tf.image.resize(image, (224, 224)) / 255
         return tf.expand_dims(image, axis=0)
 
-    def _process_image(self, path):
-        vector = self.model.predict(self._load_image(path), verbose=0)
+    def _process_image(self, image):
+        vector = self.model.predict(image, verbose=0)
         scores = l2_distance(self.index, vector[0])
         n_closest = np.argsort(scores)[:3]
         closest_product_ids = np.array(self.product_ids)[n_closest.tolist()]
@@ -121,13 +113,10 @@ class BotHandler:
     def _handle_photo(self, update: Update, context: CallbackContext):
         file_id = update.message.photo[-1].file_id
         file = context.bot.get_file(file_id)
-
-        image_bytes = file.download_as_bytearray()
-        image = tf.image.decode_image(image_bytes, channels=3)
-        image = tf.image.resize(image, (224, 224)) / 255
-        image = tf.expand_dims(image, axis=0)
-
-        result = self._process_image(image)
+        file_path = file.file_path
+        image_path = os.path.join('tmp', os.path.basename(file_path))
+        file.download(image_path)
+        result = self._process_image(self._load_image(image_path))
 
         if result:
             context.bot.send_message(chat_id=update.effective_chat.id, text=result, parse_mode='HTML')
