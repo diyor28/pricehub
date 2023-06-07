@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 
 
@@ -34,7 +35,7 @@ class ProductModel(models.Model):
     anchor_category = models.ForeignKey(AnchorCategoriesModel, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(CategoriesModel, on_delete=models.SET_NULL, null=True)
     users = models.ManyToManyField(User, related_name='favorite_products')
-
+    index = SearchVectorField(null=True)
     def __str__(self):
         return f"Product(title = {self.title}, photo={self.photo})"
 
