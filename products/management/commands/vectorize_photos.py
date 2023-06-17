@@ -9,8 +9,6 @@ from django.core.management import BaseCommand
 from pricehub import settings
 from pricehub.products import timeit
 
-# tf.keras.mixed_precision.set_global_policy("mixed_float16")
-
 gpus = tf.config.list_physical_devices('GPU')
 for device in gpus:
     print("Setting memory growth on:", device.name)
@@ -37,7 +35,7 @@ def vectorize_photos(photo_folder_path, num_photos=10):
     dataset = (
         tf.data.Dataset.from_tensor_slices(image_files)
         .map(preprocess_image, num_parallel_calls=tf.data.AUTOTUNE)
-        .batch(256)
+        .batch(64)
         .prefetch(tf.data.AUTOTUNE)
     )
 
@@ -52,4 +50,4 @@ class Command(BaseCommand):
         num_photos = 200_000
 
         vectors, ids = vectorize_photos(photo_folder_path, num_photos)
-        np.savez(os.path.join(settings.BASE_DIR, 'index2.npz'), vectors=vectors, ids=ids)
+        np.savez(os.path.join(settings.BASE_DIR, 'index.npz'), vectors=vectors, ids=ids)

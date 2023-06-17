@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import time
 
 import numpy as np
 import tensorflow as tf
@@ -9,7 +10,6 @@ from django.core.management.base import BaseCommand
 from numba import njit, prange
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
-
 from products.models import ProductModel
 
 os.environ['CUDA_VISIBLE_DEVICES'] = "-1"
@@ -97,7 +97,7 @@ class BotHandler:
         updater.start_polling()
 
     def _start(self, update: Update, context: CallbackContext):
-        context.bot.send_message(chat_id=update.effective_chat.id, text='Welcome to the Product Search Bot!')
+        context.bot.send_message(chat_id=update.effective_chat.id, text='Добро пожаловать в поисковый бот !')
 
     def _handle_photo(self, update: Update, context: CallbackContext):
         file_id = update.message.photo[-1].file_id
@@ -106,6 +106,9 @@ class BotHandler:
         image_path = os.path.join('data', os.path.basename(file_path))
         file.download(image_path)
         products = self._process_image(self._load_image(image_path))
+
+        loading_message = context.bot.send_message(chat_id=update.effective_chat.id, text='Поиск по базе...')
+        time.sleep(2)
 
         for product in products:
             title = product.title
@@ -117,3 +120,5 @@ class BotHandler:
 
             response = f"{title}\n<b>{price}</b>\n{url}\n\n"
             update.message.reply_html(response)
+
+        context.bot.delete_message(chat_id=update.effective_chat.id, message_id=loading_message.message_id)

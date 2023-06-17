@@ -4,7 +4,7 @@ RUN apt -y update && apt-get -y upgrade
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
-CMD python manage.py sbp_bot
+CMD python manage.py bot_start
 
 
 FROM nginx:1.21.6 as nginx
