@@ -12,7 +12,7 @@ cryptography==40.0.2
 cssselect==1.2.0
 defusedxml==0.7.1
 Django==4.1.7
-django-allauth==0.54.0
+django-allauth
 django-cors-headers==3.14.0
 djangorestframework==3.14.0
 exceptiongroup==1.1.1
