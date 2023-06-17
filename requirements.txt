@@ -69,7 +69,7 @@ six==1.16.0
 sniffio==1.3.0
 sqlparse==0.4.3
 tensorboard==2.10.0
-tensorboard-data-server==0.7.0
+tensorboard-data-server
 tensorflow==2.10.0
 tensorflow-estimator==2.10.0
 tensorflow-hub==0.13.0
